@@ -1,0 +1,157 @@
+/* LLMS.txt Validator Styles */
+
+/*
+Styling requested:
+#f99417 for CTA buttons
+white for background
+#493284 for headings (h1-h6)
+#362f63 for normal buttons
+#2d222d for text
+*/
+
+.llms-validator-container {
+    background-color: #ffffff;
+    color: #2d222d;
+    font-family: sans-serif;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.llms-validator-container * {
+    box-sizing: border-box;
+}
+
+.llms-validator-title {
+    color: #493284;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.llms-validator-fetch-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.llms-validator-fetch-section input[type="url"] {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #2d222d;
+}
+
+.llms-btn-cta {
+    background-color: #f99417;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.llms-btn-cta:hover {
+    background-color: #e08412;
+}
+
+/* Normal buttons (if needed later) */
+.llms-btn-normal {
+    background-color: #362f63;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.llms-btn-normal:hover {
+    background-color: #2b254f;
+}
+
+.llms-error-message {
+    background-color: #ffeaea;
+    color: #d32f2f;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border: 1px solid #f4c4c4;
+}
+
+.llms-validator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .llms-validator-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.llms-editor-panel {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.CodeMirror {
+    height: 500px;
+    font-size: 14px;
+    font-family: monospace;
+}
+
+.llms-highlight-error {
+    background-color: #ffeaea;
+}
+
+.llms-results-panel {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 20px;
+    height: 500px;
+    overflow-y: auto;
+}
+
+.llms-results-title {
+    color: #493284;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.llms-error-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.llms-error-list li {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border-left: 4px solid #d32f2f;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    color: #2d222d;
+}
+
+.llms-error-list li.llms-no-errors {
+    border-left-color: #4caf50;
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.llms-error-line {
+    font-weight: bold;
+    color: #d32f2f;
+    margin-right: 5px;
+}
