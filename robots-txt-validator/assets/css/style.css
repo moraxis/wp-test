@@ -1,0 +1,198 @@
+/*
+ * Colors:
+ * #f99417 for CTA buttons
+ * white for background
+ * #493284 for headings (h1-h6)
+ * #362f63 for normal buttons
+ * #2d222d for text
+ */
+
+.robots-validator-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #2d222d;
+    background: #ffffff;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.robots-validator-title,
+.robots-results-title {
+    color: #493284;
+}
+
+.robots-validator-title {
+    font-size: 2em;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.robots-validator-fetch-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#robots-fetch-url {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #2d222d;
+}
+
+.robots-btn-cta {
+    background-color: #f99417;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: bold;
+}
+
+.robots-btn-cta:hover {
+    background-color: #e08514;
+}
+
+.robots-btn-normal {
+    background-color: #362f63;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.robots-btn-normal:hover {
+    background-color: #2a2450;
+}
+
+.robots-error-message {
+    color: #d9534f;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.robots-validator-grid {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .robots-validator-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.robots-editor-panel {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.CodeMirror {
+    height: 500px;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.robots-results-panel {
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.robots-error-list,
+.robots-note-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.robots-error-list li,
+.robots-note-list li {
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    background: #fff;
+    border-left: 4px solid #d9534f;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.robots-note-list li {
+    border-left: 4px solid #f0ad4e;
+}
+
+.robots-no-errors {
+    border-left: 4px solid #5cb85c !important;
+    color: #5cb85c;
+    font-weight: bold;
+}
+
+.robots-no-notes {
+    border-left: 4px solid #ccc !important;
+    color: #777;
+    font-style: italic;
+}
+
+.robots-error-line {
+    font-weight: bold;
+    margin-right: 5px;
+    color: #2d222d;
+}
+
+/* Highlight style applied to CodeMirror lines */
+.robots-highlight-error {
+    background-color: rgba(217, 83, 79, 0.2);
+}
+
+.robots-highlight-warning {
+    background-color: rgba(240, 173, 78, 0.2);
+}
+
+/* URL Tester styling */
+.robots-test-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#robots-test-path,
+#robots-test-agent,
+#robots-test-agent-custom {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #2d222d;
+}
+
+.robots-test-result {
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.robots-test-allowed {
+    background-color: #dff0d8;
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+}
+
+.robots-test-disallowed {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
