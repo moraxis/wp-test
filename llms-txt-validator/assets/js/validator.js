@@ -18,6 +18,9 @@ jQuery(document).ready(function($) {
 
     const errorList = $('#llms-validation-errors');
 
+    const headingRegex = /^(#+)\s+(.*)/;
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/;
+
     // Validation logic
     function validateContent() {
         const content = editor.getValue();
@@ -58,7 +61,7 @@ jQuery(document).ready(function($) {
 
             // Check headings
             if (trimmed.startsWith('#')) {
-                const match = trimmed.match(/^(#+)\s+(.*)/);
+                const match = trimmed.match(headingRegex);
                 if (match) {
                     const level = match[1].length;
 
@@ -89,7 +92,6 @@ jQuery(document).ready(function($) {
                 if (currentSection === 'h2') {
                     // It should contain a link [name](url)
                     // The spec says: "Each 'file list' is a markdown list, containing a required markdown hyperlink [name](url), then optionally a : and notes"
-                    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/;
                     if (!linkRegex.test(trimmed)) {
                         errors.push({ line: lineNum, message: 'List items under an H2 section must contain a valid Markdown link [name](url).' });
                     }
