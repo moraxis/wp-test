@@ -3,7 +3,7 @@
  * Plugin Name: LLMS.txt Validator
  * Description: A shortcode-based plugin to validate llms.txt files according to the standard specifications. Use shortcode [llms_txt_validator].
  * Version: 1.0.0
- * Author: Jules
+ * Author: Nikola Knezhevich
  */
 
 if (!defined('ABSPATH')) {
@@ -96,6 +96,7 @@ class LLMS_Txt_Validator {
         $response = wp_safe_remote_get($url, array(
             'timeout' => 15,
             'redirection' => 5,
+            'limit_response_size' => 1048576, // 1MB limit as per security best practices
         ));
 
         if (is_wp_error($response)) {
