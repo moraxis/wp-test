@@ -2,7 +2,7 @@
 /**
  * Plugin Name: LLMS.txt Validator
  * Description: A shortcode-based plugin to validate llms.txt files according to the standard specifications. Use shortcode [llms_txt_validator].
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Nikola Knezhevich
  */
 
@@ -15,6 +15,14 @@ class LLMS_Txt_Validator {
     public function __construct() {
         add_action('init', array($this, 'init'));
         add_action('rest_api_init', array($this, 'register_rest_routes'));
+        add_filter('site_transient_update_plugins', array($this, 'disable_plugin_updates'));
+    }
+
+    public function disable_plugin_updates($transient) {
+        if (isset($transient->response['llms-txt-validator/llms-txt-validator.php'])) {
+            unset($transient->response['llms-txt-validator/llms-txt-validator.php']);
+        }
+        return $transient;
     }
 
     public function init() {
@@ -29,8 +37,8 @@ class LLMS_Txt_Validator {
         wp_register_script('codemirror-js', 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js', array(), '5.65.13', true);
         wp_register_script('codemirror-markdown', 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/markdown/markdown.min.js', array('codemirror-js'), '5.65.13', true);
 
-        wp_register_style('llms-validator-style', plugins_url('assets/css/style.css', __FILE__), array(), '1.0.0');
-        wp_register_script('llms-validator-script', plugins_url('assets/js/validator.js', __FILE__), array('jquery', 'codemirror-js', 'codemirror-markdown'), '1.0.0', true);
+        wp_register_style('llms-validator-style', plugins_url('assets/css/style.css', __FILE__), array(), '1.0.2');
+        wp_register_script('llms-validator-script', plugins_url('assets/js/validator.js', __FILE__), array('jquery', 'codemirror-js', 'codemirror-markdown'), '1.0.2', true);
 
         wp_localize_script('llms-validator-script', 'llmsValidatorConfig', array(
             'restUrl' => esc_url_raw(rest_url('llms-validator/v1/fetch')),

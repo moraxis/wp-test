@@ -42,6 +42,12 @@ white for background
     border-radius: 4px;
     font-size: 16px;
     color: #2d222d;
+    background-color: #ffffff;
+}
+
+.llms-validator-fetch-section input[type="url"]::placeholder {
+    color: #493284;
+    opacity: 1; /* Firefox applies lower opacity to placeholders by default */
 }
 
 .llms-btn-cta {
