@@ -33,10 +33,14 @@
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
-	background-color: #fcfcfc;
+	background-color: #fcfcfc !important;
 	color: #2d222d;
 	font-family: inherit;
 	box-sizing: border-box;
+}
+
+#llmstxt-main-title {
+	background-color: #fcfcfc !important;
 }
 
 .llmstxt-input:focus {
