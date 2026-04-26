@@ -152,6 +152,9 @@ jQuery(document).ready(function($) {
             url: llmsValidatorConfig.restUrl,
             method: 'GET',
             data: { url: url },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-WP-Nonce', llmsValidatorConfig.nonce);
+            },
             success: function(response) {
                 btn.prop('disabled', false).text('Fetch URL');
                 if (response.success) {

@@ -75,7 +75,7 @@ class LLMS_Txt_Validator {
         register_rest_route('llms-validator/v1', '/fetch', array(
             'methods'  => 'GET',
             'callback' => array($this, 'fetch_remote_txt'),
-            'permission_callback' => '__return_true', // Publicly accessible to handle frontend requests
+            'permission_callback' => array($this, 'check_permission'),
             'args' => array(
                 'url' => array(
                     'required' => true,
@@ -87,6 +87,10 @@ class LLMS_Txt_Validator {
         ));
     }
 
+    public function check_permission() {
+        return current_user_can('edit_posts');
+    }
+
     public function fetch_remote_txt($request) {
         $url = $request->get_param('url');
 
@@ -96,7 +100,7 @@ class LLMS_Txt_Validator {
         $response = wp_safe_remote_get($url, array(
             'timeout' => 15,
             'redirection' => 5,
-            'limit_response_size' => 1048576,
+            'limit_response_size' => 1048576, // 1MB limit
         ));
 
         if (is_wp_error($response)) {

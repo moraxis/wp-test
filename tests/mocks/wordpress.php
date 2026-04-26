@@ -1,78 +1,86 @@
 <?php
-// tests/mocks/wordpress.php
+/**
+ * WordPress Mocks for Testing
+ */
 
-class WordPressMock {
-    public static $enqueued_styles = [];
-    public static $enqueued_scripts = [];
-    public static $registered_styles = [];
-    public static $registered_scripts = [];
-    public static $localized_scripts = [];
-    public static $shortcodes = [];
-    public static $actions = [];
+define('ABSPATH', true);
 
-    public static function reset() {
-        self::$enqueued_styles = [];
-        self::$enqueued_scripts = [];
-        self::$registered_styles = [];
-        self::$registered_scripts = [];
-        self::$localized_scripts = [];
-        self::$shortcodes = [];
-        self::$actions = [];
+$mock_actions = array();
+function add_action($tag, $callback) {
+    global $mock_actions;
+    $mock_actions[$tag][] = $callback;
+}
+
+function do_action($tag) {
+    global $mock_actions;
+    if (isset($mock_actions[$tag])) {
+        foreach ($mock_actions[$tag] as $callback) {
+            call_user_func($callback);
+        }
     }
 }
+function add_shortcode($tag, $callback) {}
+function wp_register_style($handle, $src, $deps = array(), $ver = false, $media = 'all') {}
+function wp_register_script($handle, $src, $deps = array(), $ver = false, $in_footer = false) {}
+function wp_localize_script($handle, $object_name, $l10n) {}
+function plugins_url($path = '', $plugin = '') { return $path; }
+function rest_url($path = '') { return 'http://example.com/wp-json/' . $path; }
+function wp_create_nonce($action = -1) { return 'mock_nonce'; }
+function esc_url_raw($url) { return $url; }
+function register_rest_route($namespace, $route, $args = array()) {
+    global $mock_rest_routes;
+    $mock_rest_routes[$namespace . $route] = $args;
+}
+function rest_ensure_response($response) { return $response; }
 
-function wp_enqueue_style($handle) {
-    WordPressMock::$enqueued_styles[] = $handle;
+class WP_Error {
+    public $code;
+    public $message;
+    public $data;
+    public function __construct($code = '', $message = '', $data = '') {
+        $this->code = $code;
+        $this->message = $message;
+        $this->data = $data;
+    }
+    public function get_error_message() { return $this->message; }
 }
 
-function wp_enqueue_script($handle) {
-    WordPressMock::$enqueued_scripts[] = $handle;
+function is_wp_error($thing) { return $thing instanceof WP_Error; }
+
+$current_user_can_return = true;
+function current_user_can($capability) {
+    global $current_user_can_return;
+    return $current_user_can_return;
 }
 
-function wp_register_style($handle, $src, $deps = [], $ver = false, $media = 'all') {
-    WordPressMock::$registered_styles[$handle] = $src;
+function wp_safe_remote_get($url, $args = array()) {
+    global $mock_remote_get_args;
+    $mock_remote_get_args = $args;
+
+    if (strpos($url, 'error') !== false) {
+        return new WP_Error('fetch_error', 'Mock error');
+    }
+
+    return array(
+        'body' => 'mock content',
+        'response' => array('code' => 200)
+    );
 }
 
-function wp_register_script($handle, $src, $deps = [], $ver = false, $in_footer = false) {
-    WordPressMock::$registered_scripts[$handle] = $src;
+function wp_remote_retrieve_response_code($response) {
+    return isset($response['response']['code']) ? $response['response']['code'] : 0;
 }
 
-function wp_localize_script($handle, $object_name, $l10n) {
-    WordPressMock::$localized_scripts[$handle] = [$object_name => $l10n];
+function wp_remote_retrieve_body($response) {
+    return isset($response['body']) ? $response['body'] : '';
 }
 
-function add_action($tag, $function_to_add, $priority = 10, $accepted_args = 1) {
-    WordPressMock::$actions[$tag][] = $function_to_add;
-}
-
-function add_shortcode($tag, $callback) {
-    WordPressMock::$shortcodes[$tag] = $callback;
-}
-
-function plugins_url($path = '', $plugin = '') {
-    return 'http://example.com/wp-content/plugins/' . $path;
-}
-
-function rest_url($path = '') {
-    return 'http://example.com/wp-json/' . ltrim($path, '/');
-}
-
-function wp_create_nonce($action = -1) {
-    return 'mock_nonce_' . $action;
-}
-
-function register_rest_route($namespace, $route, $args = [], $override = false) {
-    // Mock implementation
-}
-
-function __return_true() {
-    return true;
-}
-
-function esc_url_raw($url) {
-    return $url;
-}
-
-if (!defined('ABSPATH')) {
-    define('ABSPATH', __DIR__ . '/../../llms-txt-validator/');
+class WP_REST_Request {
+    public $params;
+    public function __construct($params = array()) {
+        $this->params = $params;
+    }
+    public function get_param($key) {
+        return isset($this->params[$key]) ? $this->params[$key] : null;
+    }
 }
