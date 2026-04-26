@@ -11,6 +11,12 @@ function add_action($tag, $callback) {
     $mock_actions[$tag][] = $callback;
 }
 
+$mock_filters = array();
+function add_filter($tag, $callback) {
+    global $mock_filters;
+    $mock_filters[$tag][] = $callback;
+}
+
 function do_action($tag) {
     global $mock_actions;
     if (isset($mock_actions[$tag])) {
