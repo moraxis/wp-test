@@ -1,0 +1,46 @@
+name: Deploy Plugins to SiteGround
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1' # Adjust this if you use a specific PHP version
+
+      - name: Run Tests
+        run: if [ -f tests/run.php ]; then php tests/run.php; else echo "No tests/run.php found, skipping tests."; fi
+
+  deploy:
+    name: Deploy to FTP
+    needs: test # This ensures the deploy job only runs if the test job passes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # Fetch the previous commit so the FTP action knows what changed
+
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /public_html/wp-content/plugins/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/tests/**
+            **/README.md
+            **/.github/**

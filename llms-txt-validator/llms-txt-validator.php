@@ -96,6 +96,7 @@ class LLMS_Txt_Validator {
         $response = wp_safe_remote_get($url, array(
             'timeout' => 15,
             'redirection' => 5,
+            'limit_response_size' => 1048576,
         ));
 
         if (is_wp_error($response)) {
