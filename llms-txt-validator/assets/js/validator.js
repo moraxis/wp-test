@@ -36,14 +36,6 @@ jQuery(document).ready(function($) {
         let h1Count = 0;
         let firstNonEmptyLineIndex = -1;
 
-        // Pass 1: Find first non-empty line
-        for (let i = 0; i < lines.length; i++) {
-            if (lines[i].trim() !== '') {
-                firstNonEmptyLineIndex = i;
-                break;
-            }
-        }
-
         // Clear previous highlights
         editor.eachLine(function(line) {
             editor.removeLineClass(line, 'background', 'llms-highlight-error');
@@ -58,6 +50,11 @@ jQuery(document).ready(function($) {
             const lineNum = i + 1;
 
             if (trimmed === '') continue;
+
+            // Track the first non-empty line index to ensure H1 is at the top
+            if (firstNonEmptyLineIndex === -1) {
+                firstNonEmptyLineIndex = i;
+            }
 
             // Check headings
             if (trimmed.startsWith('#')) {
