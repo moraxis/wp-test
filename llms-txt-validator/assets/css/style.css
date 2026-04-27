@@ -47,6 +47,7 @@ white for background
 
 .llms-validator-fetch-section input[type="url"]::placeholder {
     color: #493284;
+    opacity: 1; /* Firefox applies lower opacity to placeholders by default */
 }
 
 .llms-btn-cta {

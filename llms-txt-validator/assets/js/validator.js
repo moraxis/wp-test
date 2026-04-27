@@ -18,6 +18,9 @@ jQuery(document).ready(function($) {
 
     const errorList = $('#llms-validation-errors');
 
+    const headingRegex = /^(#+)\s+(.*)/;
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/;
+
     // Validation logic
     function validateContent() {
         const content = editor.getValue();
@@ -32,14 +35,6 @@ jQuery(document).ready(function($) {
         let hasH1 = false;
         let h1Count = 0;
         let firstNonEmptyLineIndex = -1;
-
-        // Pass 1: Find first non-empty line
-        for (let i = 0; i < lines.length; i++) {
-            if (lines[i].trim() !== '') {
-                firstNonEmptyLineIndex = i;
-                break;
-            }
-        }
 
         // Clear previous highlights
         editor.eachLine(function(line) {
@@ -56,9 +51,14 @@ jQuery(document).ready(function($) {
 
             if (trimmed === '') continue;
 
+            // Track the first non-empty line index to ensure H1 is at the top
+            if (firstNonEmptyLineIndex === -1) {
+                firstNonEmptyLineIndex = i;
+            }
+
             // Check headings
             if (trimmed.startsWith('#')) {
-                const match = trimmed.match(/^(#+)\s+(.*)/);
+                const match = trimmed.match(headingRegex);
                 if (match) {
                     const level = match[1].length;
 
@@ -89,7 +89,6 @@ jQuery(document).ready(function($) {
                 if (currentSection === 'h2') {
                     // It should contain a link [name](url)
                     // The spec says: "Each 'file list' is a markdown list, containing a required markdown hyperlink [name](url), then optionally a : and notes"
-                    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/;
                     if (!linkRegex.test(trimmed)) {
                         errors.push({ line: lineNum, message: 'List items under an H2 section must contain a valid Markdown link [name](url).' });
                     }
@@ -153,6 +152,9 @@ jQuery(document).ready(function($) {
             url: llmsValidatorConfig.restUrl,
             method: 'GET',
             data: { url: url },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-WP-Nonce', llmsValidatorConfig.nonce);
+            },
             success: function(response) {
                 btn.prop('disabled', false).text('Fetch URL');
                 if (response.success) {
