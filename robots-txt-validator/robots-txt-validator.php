@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Robots.txt Validator
  * Description: A shortcode-based plugin to validate robots.txt files. Use shortcode [robots_txt_validator].
- * Version: 1.0.0
- * Author: Jules
+ * Version: 1.0.1
+ * Author: Nikola Knezhevich
  */
 
 if (!defined('ABSPATH')) {
@@ -28,8 +28,8 @@ class Robots_Txt_Validator {
 
         // No specific markdown mode needed for robots.txt, default or a simple generic mode is fine, we'll use base.
 
-        wp_register_style('robots-validator-style', plugins_url('assets/css/style.css', __FILE__), array('codemirror-css'), '1.0.0');
-        wp_register_script('robots-validator-script', plugins_url('assets/js/validator.js', __FILE__), array('jquery', 'codemirror-js'), '1.0.0', true);
+        wp_register_style('robots-validator-style', plugins_url('assets/css/style.css', __FILE__), array('codemirror-css'), '1.0.1');
+        wp_register_script('robots-validator-script', plugins_url('assets/js/validator.js', __FILE__), array('jquery', 'codemirror-js'), '1.0.1', true);
 
         wp_localize_script('robots-validator-script', 'robotsValidatorConfig', array(
             'restUrl' => esc_url_raw(rest_url('robots-validator/v1/fetch')),
@@ -53,10 +53,16 @@ class Robots_Txt_Validator {
             </div>
             <div id="robots-fetch-error" class="robots-error-message" style="display:none;"></div>
 
-            <div class="robots-validator-grid">
+            <div class="robots-validator-grid" style="position: relative;">
                 <div class="robots-editor-panel">
                     <textarea id="robots-editor" placeholder="Paste your robots.txt content here..."></textarea>
                 </div>
+
+                <button type="button" id="robots-test-again-btn" class="robots-test-again-btn" title="Run new test">
+                    <span class="robots-test-again-text">test</span>
+                    <span class="robots-test-again-icon">&#9654;</span>
+                </button>
+
                 <div class="robots-results-panel">
                     <h3 class="robots-results-title">Validation Results</h3>
                     <ul id="robots-validation-errors" class="robots-error-list">
@@ -67,27 +73,27 @@ class Robots_Txt_Validator {
                     <ul id="robots-validation-notes" class="robots-note-list">
                         <li class="robots-no-notes">No notes.</li>
                     </ul>
-
-                    <div class="robots-test-tool" style="margin-top: 30px;">
-                        <h3 class="robots-results-title">URL Path Tester</h3>
-                        <div class="robots-test-inputs">
-                            <input type="text" id="robots-test-path" placeholder="e.g. /private/page.html" />
-                            <select id="robots-test-agent">
-                                <option value="*">Any User-Agent (*)</option>
-                                <option value="Googlebot">Googlebot</option>
-                                <option value="Bingbot">Bingbot</option>
-                                <option value="Slurp">Yahoo Slurp</option>
-                                <option value="DuckDuckBot">DuckDuckBot</option>
-                                <option value="Baiduspider">Baiduspider</option>
-                                <option value="YandexBot">YandexBot</option>
-                                <option value="Other">Other (custom)</option>
-                            </select>
-                            <input type="text" id="robots-test-agent-custom" placeholder="Custom User-Agent" style="display:none;" />
-                            <button type="button" id="robots-test-btn" class="robots-btn-normal">Test Path</button>
-                        </div>
-                        <div id="robots-test-result" class="robots-test-result" style="display:none; margin-top: 15px; font-weight: bold;"></div>
-                    </div>
                 </div>
+            </div>
+
+            <div class="robots-test-tool" style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+                <h3 class="robots-results-title">URL Path Tester</h3>
+                <div class="robots-test-inputs" style="display:flex; flex-direction:row; gap:10px;">
+                    <input type="text" id="robots-test-path" placeholder="e.g. /private/page.html" style="flex:1;" />
+                    <select id="robots-test-agent" style="flex:1;">
+                        <option value="*">Any User-Agent (*)</option>
+                        <option value="Googlebot">Googlebot</option>
+                        <option value="Bingbot">Bingbot</option>
+                        <option value="Slurp">Yahoo Slurp</option>
+                        <option value="DuckDuckBot">DuckDuckBot</option>
+                        <option value="Baiduspider">Baiduspider</option>
+                        <option value="YandexBot">YandexBot</option>
+                        <option value="Other">Other (custom)</option>
+                    </select>
+                    <input type="text" id="robots-test-agent-custom" placeholder="Custom User-Agent" style="display:none; flex:1;" />
+                    <button type="button" id="robots-test-btn" class="robots-btn-normal" style="flex:none;">Test Path</button>
+                </div>
+                <div id="robots-test-result" class="robots-test-result" style="display:none; margin-top: 15px; font-weight: bold;"></div>
             </div>
         </div>
         <?php
