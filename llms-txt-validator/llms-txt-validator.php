@@ -15,6 +15,14 @@ class LLMS_Txt_Validator {
     public function __construct() {
         add_action('init', array($this, 'init'));
         add_action('rest_api_init', array($this, 'register_rest_routes'));
+        add_filter('site_transient_update_plugins', array($this, 'disable_plugin_updates'));
+    }
+
+    public function disable_plugin_updates($transient) {
+        if (isset($transient->response['llms-txt-validator/llms-txt-validator.php'])) {
+            unset($transient->response['llms-txt-validator/llms-txt-validator.php']);
+        }
+        return $transient;
     }
 
     public function init() {
@@ -29,8 +37,8 @@ class LLMS_Txt_Validator {
         wp_register_script('codemirror-js', 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js', array(), '5.65.13', true);
         wp_register_script('codemirror-markdown', 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/markdown/markdown.min.js', array('codemirror-js'), '5.65.13', true);
 
-        wp_register_style('llms-validator-style', plugins_url('assets/css/style.css', __FILE__), array(), '1.0.0');
-        wp_register_script('llms-validator-script', plugins_url('assets/js/validator.js', __FILE__), array('jquery', 'codemirror-js', 'codemirror-markdown'), '1.0.0', true);
+        wp_register_style('llms-validator-style', plugins_url('assets/css/style.css', __FILE__), array(), '1.0.2');
+        wp_register_script('llms-validator-script', plugins_url('assets/js/validator.js', __FILE__), array('jquery', 'codemirror-js', 'codemirror-markdown'), '1.0.2', true);
 
         wp_localize_script('llms-validator-script', 'llmsValidatorConfig', array(
             'restUrl' => esc_url_raw(rest_url('llms-validator/v1/fetch')),
@@ -75,7 +83,7 @@ class LLMS_Txt_Validator {
         register_rest_route('llms-validator/v1', '/fetch', array(
             'methods'  => 'GET',
             'callback' => array($this, 'fetch_remote_txt'),
-            'permission_callback' => '__return_true', // Publicly accessible to handle frontend requests
+            'permission_callback' => array($this, 'check_permission'),
             'args' => array(
                 'url' => array(
                     'required' => true,
@@ -87,6 +95,10 @@ class LLMS_Txt_Validator {
         ));
     }
 
+    public function check_permission() {
+        return current_user_can('edit_posts');
+    }
+
     public function fetch_remote_txt($request) {
         $url = $request->get_param('url');
 
@@ -96,6 +108,7 @@ class LLMS_Txt_Validator {
         $response = wp_safe_remote_get($url, array(
             'timeout' => 15,
             'redirection' => 5,
+            'limit_response_size' => 1048576, // 1MB limit
         ));
 
         if (is_wp_error($response)) {
