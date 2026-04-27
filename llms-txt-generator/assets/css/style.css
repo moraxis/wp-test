@@ -33,19 +33,24 @@
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
-	background-color: #fcfcfc !important;
+	background-color: #ffffff !important;
 	color: #2d222d;
 	font-family: inherit;
 	box-sizing: border-box;
 }
 
 #llmstxt-main-title {
-	background-color: #fcfcfc !important;
+	background-color: #ffffff !important;
 }
 
 .llmstxt-input:focus {
 	border-color: #493284;
 	outline: none;
+}
+
+.llmstxt-input::placeholder {
+	color: #493284;
+	opacity: 1;
 }
 
 .llmstxt-btn {
