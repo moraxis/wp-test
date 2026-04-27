@@ -42,6 +42,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     color: #2d222d;
+    background-color: #fcfcfc;
 }
 
 .robots-btn-cta {
@@ -177,6 +178,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     color: #2d222d;
+    background-color: #fcfcfc;
 }
 
 .robots-test-result {
@@ -195,4 +197,58 @@
     background-color: #f2dede;
     color: #a94442;
     border: 1px solid #ebccd1;
+}
+
+/* "Test Again" Button (Schema.org style) */
+.robots-test-again-btn {
+    position: absolute;
+    top: 50%;
+    left: 60%; /* Assuming 3fr 2fr grid -> 60% left */
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #362f63;
+    color: #ffffff;
+    border: 4px solid #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    z-index: 10;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+@media (max-width: 768px) {
+    .robots-test-again-btn {
+        top: 500px; /* Below the editor */
+        left: 50%;
+    }
+}
+
+.robots-test-again-btn.active {
+    opacity: 1;
+    cursor: pointer;
+    background-color: #f99417;
+}
+
+.robots-test-again-btn.active:hover {
+    background-color: #e08514;
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+.robots-test-again-text {
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.robots-test-again-icon {
+    font-size: 18px;
+    line-height: 1;
 }

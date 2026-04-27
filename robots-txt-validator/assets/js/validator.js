@@ -164,6 +164,15 @@ jQuery(document).ready(function($) {
     editor.on('change', function() {
         validateContent();
         $('#robots-test-result').hide(); // Hide test result when content changes
+        $('#robots-test-again-btn').addClass('active'); // Activate the manual test button
+    });
+
+    // Handle Manual Test Again button
+    $('#robots-test-again-btn').on('click', function() {
+        if ($(this).hasClass('active')) {
+            validateContent();
+            $(this).removeClass('active');
+        }
     });
 
     // Handle Fetch button
