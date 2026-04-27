@@ -58,8 +58,12 @@ class Robots_Txt_Validator {
                     <textarea id="robots-editor" placeholder="Paste your robots.txt content here..."></textarea>
                 </div>
                 <div class="robots-results-panel">
-                    <h3 class="robots-results-title">Validation Results</h3>
-                    <ul id="robots-validation-errors" class="robots-error-list">
+                    <div class="robots-validate-header">
+                        <h3 class="robots-results-title" style="margin: 0;">Validation Results</h3>
+                        <button type="button" id="robots-validate-btn" disabled>Validate Changes</button>
+                    </div>
+
+                    <ul id="robots-validation-errors" class="robots-error-list" style="margin-top: 15px;">
                         <li class="robots-no-errors">Awaiting input...</li>
                     </ul>
 
@@ -67,27 +71,27 @@ class Robots_Txt_Validator {
                     <ul id="robots-validation-notes" class="robots-note-list">
                         <li class="robots-no-notes">No notes.</li>
                     </ul>
-
-                    <div class="robots-test-tool" style="margin-top: 30px;">
-                        <h3 class="robots-results-title">URL Path Tester</h3>
-                        <div class="robots-test-inputs">
-                            <input type="text" id="robots-test-path" placeholder="e.g. /private/page.html" />
-                            <select id="robots-test-agent">
-                                <option value="*">Any User-Agent (*)</option>
-                                <option value="Googlebot">Googlebot</option>
-                                <option value="Bingbot">Bingbot</option>
-                                <option value="Slurp">Yahoo Slurp</option>
-                                <option value="DuckDuckBot">DuckDuckBot</option>
-                                <option value="Baiduspider">Baiduspider</option>
-                                <option value="YandexBot">YandexBot</option>
-                                <option value="Other">Other (custom)</option>
-                            </select>
-                            <input type="text" id="robots-test-agent-custom" placeholder="Custom User-Agent" style="display:none;" />
-                            <button type="button" id="robots-test-btn" class="robots-btn-normal">Test Path</button>
-                        </div>
-                        <div id="robots-test-result" class="robots-test-result" style="display:none; margin-top: 15px; font-weight: bold;"></div>
-                    </div>
                 </div>
+            </div>
+
+            <div class="robots-test-section">
+                <h3 class="robots-results-title">URL Path Tester</h3>
+                <div class="robots-test-inputs">
+                    <input type="text" id="robots-test-path" placeholder="e.g. /private/page.html" />
+                    <select id="robots-test-agent">
+                        <option value="*">Any User-Agent (*)</option>
+                        <option value="Googlebot">Googlebot</option>
+                        <option value="Bingbot">Bingbot</option>
+                        <option value="Slurp">Yahoo Slurp</option>
+                        <option value="DuckDuckBot">DuckDuckBot</option>
+                        <option value="Baiduspider">Baiduspider</option>
+                        <option value="YandexBot">YandexBot</option>
+                        <option value="Other">Other (custom)</option>
+                    </select>
+                    <input type="text" id="robots-test-agent-custom" placeholder="Custom User-Agent" style="display:none;" />
+                    <button type="button" id="robots-test-btn" class="robots-btn-normal">Test Path</button>
+                </div>
+                <div id="robots-test-result" class="robots-test-result" style="display:none; margin-top: 15px; font-weight: bold;"></div>
             </div>
         </div>
         <?php

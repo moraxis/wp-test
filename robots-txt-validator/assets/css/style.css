@@ -42,6 +42,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     color: #2d222d;
+    background-color: #fcfcfc;
 }
 
 .robots-btn-cta {
@@ -177,6 +178,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     color: #2d222d;
+    background-color: #fcfcfc;
 }
 
 .robots-test-result {
@@ -195,4 +197,36 @@
     background-color: #f2dede;
     color: #a94442;
     border: 1px solid #ebccd1;
+}
+
+/* Style for the new Validate button */
+.robots-validate-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#robots-validate-btn {
+    background-color: #f99417;
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+#robots-validate-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.robots-test-section {
+    margin-top: 30px;
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 20px;
 }

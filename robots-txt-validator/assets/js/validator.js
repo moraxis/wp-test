@@ -160,10 +160,16 @@ jQuery(document).ready(function($) {
         }
     }
 
-    // Bind change event to validate real-time
+    // Bind change event to enable Validate button
     editor.on('change', function() {
-        validateContent();
+        $('#robots-validate-btn').prop('disabled', false).text('Validate Changes');
         $('#robots-test-result').hide(); // Hide test result when content changes
+    });
+
+    // Handle manual Validate button
+    $('#robots-validate-btn').on('click', function() {
+        validateContent();
+        $(this).prop('disabled', true).text('Validated \u2713');
     });
 
     // Handle Fetch button
@@ -189,6 +195,8 @@ jQuery(document).ready(function($) {
                 btn.prop('disabled', false).text('Fetch URL');
                 if (response.success) {
                     editor.setValue(response.content);
+                    validateContent();
+                    $('#robots-validate-btn').prop('disabled', true).text('Validated \u2713');
                 } else {
                     errorDiv.text('An error occurred.').show();
                 }
