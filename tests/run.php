@@ -14,14 +14,15 @@ class TestRunner {
     protected $failed = 0;
 
     public function run() {
-        $testClasses = array(
-            'LLMS_Txt_Validator_Test'
-        );
+        // Explicitly include test files
+        require_once __DIR__ . '/LLMS_Txt_Validator_Test.php';
+        $test1 = new LLMS_Txt_Validator_Test();
+        $test1->run($this);
 
-        foreach ($testClasses as $testClass) {
-            require_once __DIR__ . '/' . $testClass . '.php';
-            $testInstance = new $testClass();
-            $testInstance->run($this);
+        try {
+            require_once __DIR__ . '/test-image-alt-auditor.php';
+        } catch (Exception $e) {
+            $this->recordFail($e->getMessage());
         }
 
         echo "\nTests completed. Passed: {$this->passed}, Failed: {$this->failed}\n";
