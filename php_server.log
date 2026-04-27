@@ -1,0 +1,43 @@
+[Mon Apr 27 23:13:29 2026] PHP 8.3.6 Development Server (http://localhost:3000) started
+[Mon Apr 27 23:13:43 2026] [::1]:41070 Accepted
+[Mon Apr 27 23:13:43 2026] [::1]:41070 [200]: GET /index.php
+[Mon Apr 27 23:13:43 2026] [::1]:41070 Closing
+[Mon Apr 27 23:13:43 2026] [::1]:41086 Accepted
+[Mon Apr 27 23:13:43 2026] [::1]:41088 Accepted
+[Mon Apr 27 23:13:43 2026] [::1]:41086 [200]: GET /hreflang-tags-tester/assets/style.css
+[Mon Apr 27 23:13:43 2026] [::1]:41088 [200]: GET /hreflang-tags-tester/assets/script.js
+[Mon Apr 27 23:13:43 2026] [::1]:41086 Closing
+[Mon Apr 27 23:13:43 2026] [::1]:41088 Closing
+[Mon Apr 27 23:13:45 2026] [::1]:41090 Accepted
+[Mon Apr 27 23:13:45 2026] [::1]:41090 [200]: POST /mock-rest-url/parse
+[Mon Apr 27 23:13:45 2026] [::1]:41090 Closing
+[Mon Apr 27 23:14:41 2026] [::1]:39712 Accepted
+[Mon Apr 27 23:14:41 2026] [::1]:39712 [200]: GET /index.php
+[Mon Apr 27 23:14:41 2026] [::1]:39712 Closing
+[Mon Apr 27 23:14:41 2026] [::1]:39718 Accepted
+[Mon Apr 27 23:14:41 2026] [::1]:39730 Accepted
+[Mon Apr 27 23:14:41 2026] [::1]:39718 [200]: GET /hreflang-tags-tester/assets/style.css
+[Mon Apr 27 23:14:41 2026] [::1]:39718 Closing
+[Mon Apr 27 23:14:41 2026] [::1]:39730 [200]: GET /hreflang-tags-tester/assets/script.js
+[Mon Apr 27 23:14:41 2026] [::1]:39730 Closing
+[Mon Apr 27 23:14:42 2026] [::1]:39734 Accepted
+[Mon Apr 27 23:14:42 2026] [::1]:39734 [200]: POST /mock-rest-url/parse
+[Mon Apr 27 23:14:42 2026] [::1]:39734 Closing
+[Mon Apr 27 23:15:25 2026] [::1]:56906 Accepted
+[Mon Apr 27 23:15:25 2026] [::1]:56906 [200]: GET /index.php
+[Mon Apr 27 23:15:25 2026] [::1]:56906 Closing
+[Mon Apr 27 23:15:25 2026] [::1]:56912 Accepted
+[Mon Apr 27 23:15:25 2026] [::1]:56918 Accepted
+[Mon Apr 27 23:15:25 2026] [::1]:56912 [200]: GET /hreflang-tags-tester/assets/style.css
+[Mon Apr 27 23:15:25 2026] [::1]:56912 Closing
+[Mon Apr 27 23:15:25 2026] [::1]:56918 [200]: GET /hreflang-tags-tester/assets/script.js
+[Mon Apr 27 23:15:25 2026] [::1]:56918 Closing
+[Mon Apr 27 23:17:59 2026] [::1]:60388 Accepted
+[Mon Apr 27 23:17:59 2026] [::1]:60388 [200]: GET /index.php
+[Mon Apr 27 23:17:59 2026] [::1]:60388 Closing
+[Mon Apr 27 23:17:59 2026] [::1]:60404 Accepted
+[Mon Apr 27 23:17:59 2026] [::1]:60408 Accepted
+[Mon Apr 27 23:17:59 2026] [::1]:60404 [200]: GET /hreflang-tags-tester/assets/style.css
+[Mon Apr 27 23:17:59 2026] [::1]:60408 [200]: GET /hreflang-tags-tester/assets/script.js
+[Mon Apr 27 23:17:59 2026] [::1]:60404 Closing
+[Mon Apr 27 23:17:59 2026] [::1]:60408 Closing
