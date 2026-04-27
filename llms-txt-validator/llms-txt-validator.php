@@ -2,8 +2,8 @@
 /**
  * Plugin Name: LLMS.txt Validator
  * Description: A shortcode-based plugin to validate llms.txt files according to the standard specifications. Use shortcode [llms_txt_validator].
- * Version: 1.0.2
- * Author: Nikola Knezhevich
+ * Version: 1.0.1
+ * Author: Jules
  */
 
 if (!defined('ABSPATH')) {

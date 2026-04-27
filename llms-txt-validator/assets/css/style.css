@@ -66,20 +66,6 @@ white for background
     background-color: #e08412;
 }
 
-/* Normal buttons (if needed later) */
-.llms-btn-normal {
-    background-color: #362f63;
-    color: #ffffff;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-.llms-btn-normal:hover {
-    background-color: #2b254f;
-}
-
 .llms-error-message {
     background-color: #ffeaea;
     color: #d32f2f;
