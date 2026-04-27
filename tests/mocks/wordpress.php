@@ -81,6 +81,10 @@ function wp_remote_retrieve_body($response) {
     return isset($response['body']) ? $response['body'] : '';
 }
 
+function wp_remote_retrieve_headers($response) {
+    return isset($response['headers']) ? $response['headers'] : array();
+}
+
 class WP_REST_Request {
     public $params;
     public function __construct($params = array()) {
