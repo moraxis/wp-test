@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       LLMs.txt Generator
  * Description:       A tool to generate llms.txt files by scraping titles and meta descriptions from a list of URLs.
- * Version:           1.0.2
+ * Version:           1.0.3
  * Author:            Nikola Knezhevich
  * Author URI:        https://www.theknez.com/
  * License:           GPL-2.0+
@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Define plugin constants
-define( 'LLMSTXT_GENERATOR_VERSION', '1.0.2' );
+define( 'LLMSTXT_GENERATOR_VERSION', '1.0.3' );
 
 // Disable public WordPress plugin updates for this custom plugin
 function llmstxt_generator_disable_updates( $transient ) {
