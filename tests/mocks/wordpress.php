@@ -25,7 +25,11 @@ function do_action($tag) {
         }
     }
 }
-function add_shortcode($tag, $callback) {}
+$shortcodes = array();
+function add_shortcode($tag, $callback) {
+    global $shortcodes;
+    $shortcodes[$tag] = $callback;
+}
 function wp_register_style($handle, $src, $deps = array(), $ver = false, $media = 'all') {}
 function wp_register_script($handle, $src, $deps = array(), $ver = false, $in_footer = false) {}
 function wp_localize_script($handle, $object_name, $l10n) {}
