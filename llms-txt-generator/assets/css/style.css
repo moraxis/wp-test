@@ -31,7 +31,7 @@
 .llmstxt-input {
 	width: 100%;
 	padding: 10px;
-	border: 1px solid #ccc;
+	border: 1px solid #ccc !important;
 	border-radius: 4px;
 	background-color: #ffffff !important;
 	color: #2d222d;
@@ -44,7 +44,7 @@
 }
 
 .llmstxt-input:focus {
-	border-color: #493284;
+	border-color: #493284 !important;
 	outline: none;
 }
 
