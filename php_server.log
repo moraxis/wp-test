@@ -1,0 +1,15 @@
+[Tue Apr 28 07:57:39 2026] PHP 8.3.6 Development Server (http://0.0.0.0:3000) started
+[Tue Apr 28 08:02:57 2026] 127.0.0.1:33950 Accepted
+[Tue Apr 28 08:02:57 2026] PHP Warning:  Constant ABSPATH already defined in /app/tests/mocks/wordpress.php on line 6
+[Tue Apr 28 08:02:57 2026] 127.0.0.1:33950 [200]: GET /
+[Tue Apr 28 08:02:57 2026] 127.0.0.1:33950 Closing
+[Tue Apr 28 08:02:57 2026] 127.0.0.1:33956 Accepted
+[Tue Apr 28 08:02:57 2026] 127.0.0.1:33966 Accepted
+[Tue Apr 28 08:02:57 2026] 127.0.0.1:33956 [200]: GET /live-header-checker/assets/style.css
+[Tue Apr 28 08:02:57 2026] 127.0.0.1:33966 [200]: GET /live-header-checker/assets/script.js
+[Tue Apr 28 08:02:57 2026] 127.0.0.1:33956 Closing
+[Tue Apr 28 08:02:57 2026] 127.0.0.1:33966 Closing
+[Tue Apr 28 08:02:59 2026] 127.0.0.1:33972 Accepted
+[Tue Apr 28 08:02:59 2026] PHP Warning:  Constant ABSPATH already defined in /app/tests/mocks/wordpress.php on line 6
+[Tue Apr 28 08:02:59 2026] 127.0.0.1:33972 [200]: POST /wp-json/live-header-checker/v1/check
+[Tue Apr 28 08:02:59 2026] 127.0.0.1:33972 Closing

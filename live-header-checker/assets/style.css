@@ -1,0 +1,188 @@
+.lhc-container {
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #2d222d;
+}
+
+.lhc-heading {
+    color: #493284;
+    margin-bottom: 20px;
+}
+
+.lhc-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.lhc-input, .lhc-select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fcfcfc;
+    color: #2d222d;
+    font-size: 16px;
+}
+
+.lhc-input::placeholder {
+    color: #493284;
+    opacity: 0.7;
+}
+
+.lhc-input {
+    flex-grow: 1;
+    min-width: 250px;
+}
+
+.lhc-select {
+    min-width: 150px;
+}
+
+.lhc-btn {
+    padding: 10px 20px;
+    background-color: #f99417;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.lhc-btn:hover {
+    background-color: #e08310;
+}
+
+.lhc-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.lhc-results {
+    background-color: #ffffff;
+    border-radius: 4px;
+}
+
+.lhc-step {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.lhc-step-header {
+    background-color: #fcfcfc;
+    padding: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid transparent;
+}
+
+.lhc-step-header:hover {
+    background-color: #f0f0f0;
+}
+
+.lhc-step.expanded .lhc-step-header {
+    border-bottom: 1px solid #ddd;
+}
+
+.lhc-step-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    word-break: break-all;
+}
+
+.lhc-status {
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: white;
+    min-width: 45px;
+    text-align: center;
+}
+
+.status-200 { background-color: #4CAF50; }
+.status-301, .status-302, .status-307, .status-308 { background-color: #2196F3; }
+.status-404, .status-500, .status-error { background-color: #F44336; }
+.status-other { background-color: #607D8B; }
+
+.lhc-url-text {
+    font-weight: 500;
+}
+
+.lhc-toggle-icon {
+    font-size: 12px;
+    transition: transform 0.3s;
+}
+
+.lhc-step.expanded .lhc-toggle-icon {
+    transform: rotate(180deg);
+}
+
+.lhc-step-body {
+    display: none;
+    padding: 15px;
+    background-color: #ffffff;
+}
+
+.lhc-step.expanded .lhc-step-body {
+    display: block;
+}
+
+.lhc-important-headers {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #ccc;
+}
+
+.lhc-header-row {
+    display: flex;
+    margin-bottom: 5px;
+    font-family: monospace;
+    font-size: 14px;
+    word-break: break-all;
+}
+
+.lhc-header-key {
+    font-weight: bold;
+    color: #493284;
+    min-width: 150px;
+}
+
+.lhc-header-value {
+    color: #2d222d;
+}
+
+.lhc-error-message {
+    color: #F44336;
+    padding: 15px;
+    background-color: #ffebee;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.lhc-loading {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.lhc-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #f99417;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: lhc-spin 1s linear infinite;
+}
+
+@keyframes lhc-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
