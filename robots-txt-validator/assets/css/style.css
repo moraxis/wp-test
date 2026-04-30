@@ -22,6 +22,10 @@
     color: #493284;
 }
 
+.robots-results-panel .robots-results-title {
+    font-size: 22px;
+}
+
 .robots-validator-title {
     font-size: 2em;
     margin-bottom: 20px;

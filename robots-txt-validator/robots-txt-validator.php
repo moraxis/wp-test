@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Robots.txt Validator
  * Description: A shortcode-based plugin to validate robots.txt files. Use shortcode [robots_txt_validator].
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Nikola Knezhevich
  */
 
@@ -28,8 +28,8 @@ class Robots_Txt_Validator {
 
         // No specific markdown mode needed for robots.txt, default or a simple generic mode is fine, we'll use base.
 
-        wp_register_style('robots-validator-style', plugins_url('assets/css/style.css', __FILE__), array('codemirror-css'), '1.0.1');
-        wp_register_script('robots-validator-script', plugins_url('assets/js/validator.js', __FILE__), array('jquery', 'codemirror-js'), '1.0.1', true);
+        wp_register_style('robots-validator-style', plugins_url('assets/css/style.css', __FILE__), array('codemirror-css'), '1.0.2');
+        wp_register_script('robots-validator-script', plugins_url('assets/js/validator.js', __FILE__), array('jquery', 'codemirror-js'), '1.0.2', true);
 
         wp_localize_script('robots-validator-script', 'robotsValidatorConfig', array(
             'restUrl' => esc_url_raw(rest_url('robots-validator/v1/fetch')),
