@@ -45,30 +45,38 @@ jQuery(document).ready(function($) {
     $('#tlg-scan-all').on('click', function(e) {
         e.preventDefault();
         var btn = $(this);
-        var rowsToScan = $('.tlg-needs-scan');
+        var rowsToScan = $('#tlg-posts-table tr');
         var total = rowsToScan.length;
 
         if (total === 0) {
-            alert('All posts are up to date!');
+            alert('No posts found to scan.');
             return;
         }
 
         btn.prop('disabled', true);
         var current = 0;
 
+        $('#tlg-progress-container').show();
+        $('#tlg-progress-bar').css('width', '0%');
+        $('#tlg-scan-status').text('0/' + total + ' pages scanned');
+
         function processNext() {
             if (current >= total) {
                 btn.prop('disabled', false);
-                $('#tlg-scan-status').text('All scans complete!');
+                $('#tlg-scan-status').text(total + '/' + total + ' pages scanned. All scans complete!');
+                $('#tlg-progress-bar').css('width', '100%');
                 return;
             }
 
             var row = $(rowsToScan[current]);
             var postId = row.data('post-id');
-            $('#tlg-scan-status').text('Scanning post ' + (current + 1) + ' of ' + total + '...');
 
             scanPost(postId, row, function() {
                 current++;
+                var percent = Math.round((current / total) * 100);
+                $('#tlg-progress-bar').css('width', percent + '%');
+                $('#tlg-scan-status').text(current + '/' + total + ' pages scanned');
+
                 setTimeout(processNext, 1000); // 1 sec delay between requests to be gentle on API
             });
         }

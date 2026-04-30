@@ -85,7 +85,14 @@ class The_Link_Goblin_Dashboard {
 
         echo '<div class="wrap">';
         echo '<h1>The Link Goblin Dashboard</h1>';
-        echo '<p><button id="tlg-scan-all" class="button button-primary">Scan All Pending / Updated Posts</button> <span id="tlg-scan-status"></span></p>';
+
+        echo '<div class="tlg-dashboard-controls" style="margin-bottom: 20px;">';
+        echo '<p><button id="tlg-scan-all" class="button button-primary">Scan All Pages</button></p>';
+        echo '<div id="tlg-progress-container" style="display: none; width: 100%; max-width: 600px; background: #e0e0e0; border-radius: 4px; overflow: hidden; margin-top: 10px;">';
+        echo '<div id="tlg-progress-bar" style="width: 0%; height: 24px; background: #46b450; transition: width 0.3s;"></div>';
+        echo '</div>';
+        echo '<p id="tlg-scan-status" style="font-weight: bold;"></p>';
+        echo '</div>';
 
         echo '<table class="wp-list-table widefat fixed striped">';
         echo '<thead><tr>';
