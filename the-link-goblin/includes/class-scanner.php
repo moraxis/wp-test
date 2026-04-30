@@ -7,6 +7,22 @@ class The_Link_Goblin_Scanner {
 
     public function __construct() {
         add_action( 'wp_ajax_the_link_goblin_scan_post', array( $this, 'ajax_scan_post' ) );
+        add_action( 'save_post', array( $this, 'mark_post_for_rescan' ), 10, 3 );
+    }
+
+    public function mark_post_for_rescan( $post_id, $post, $update ) {
+        // Only care about post, page, glossary
+        if ( ! in_array( $post->post_type, array( 'post', 'page', 'glossary' ) ) ) {
+            return;
+        }
+
+        // Don't run on autosave
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return;
+        }
+
+        // Only mark if it's an update, or if we want new posts to be marked too
+        update_post_meta( $post_id, '_the_link_goblin_needs_rescan', '1' );
     }
 
     public function ajax_scan_post() {
@@ -34,8 +50,8 @@ class The_Link_Goblin_Scanner {
         global $wpdb;
 
         $post = get_post( $post_id );
-        if ( ! $post || $post->post_status !== 'publish' ) {
-            return new WP_Error( 'invalid_post', 'Post is not published or invalid.' );
+        if ( ! $post || in_array( $post->post_status, array( 'trash', 'auto-draft' ) ) ) {
+            return new WP_Error( 'invalid_post', 'Post is invalid or trashed.' );
         }
 
         // Get actual text content by stripping tags. For better context we could keep some tags, but plain text is safer for tokens.
@@ -46,7 +62,7 @@ class The_Link_Goblin_Scanner {
 
         // Fetch up to 100 potential target posts
         $target_posts = get_posts( array(
-            'post_type'      => 'post',
+            'post_type'      => array( 'post', 'page', 'glossary' ),
             'post_status'    => 'publish',
             'posts_per_page' => 100,
             'exclude'        => array( $post_id ),

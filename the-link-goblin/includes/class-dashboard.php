@@ -74,10 +74,10 @@ class The_Link_Goblin_Dashboard {
 
         $instance = new self();
 
-        // Get all published posts
+        // Get all posts, pages, and glossary items that are not in trash
         $posts = get_posts( array(
-            'post_type'      => 'post',
-            'post_status'    => 'publish',
+            'post_type'      => array( 'post', 'page', 'glossary' ),
+            'post_status'    => array( 'publish', 'draft', 'pending', 'future', 'private' ),
             'posts_per_page' => -1,
         ) );
 
@@ -89,7 +89,7 @@ class The_Link_Goblin_Dashboard {
 
         echo '<table class="wp-list-table widefat fixed striped">';
         echo '<thead><tr>';
-        echo '<th>Post Title</th>';
+        echo '<th>Title / Type / Status</th>';
         echo '<th>Inbound (Internal)</th>';
         echo '<th>Outbound (External)</th>';
         echo '<th>Available Suggestions</th>';
@@ -106,8 +106,16 @@ class The_Link_Goblin_Dashboard {
 
             $status_class = ( ! $last_scanned || $needs_rescan ) ? 'tlg-needs-scan' : 'tlg-scanned';
 
+            $post_type_obj = get_post_type_object( $post->post_type );
+            $type_label = $post_type_obj ? $post_type_obj->labels->singular_name : $post->post_type;
+
+            $status_label = '';
+            if ( $post->post_status !== 'publish' ) {
+                $status_label = ' — <span style="color:#888;">' . esc_html( ucfirst( $post->post_status ) ) . '</span>';
+            }
+
             echo '<tr data-post-id="' . esc_attr( $post->ID ) . '" class="' . esc_attr( $status_class ) . '">';
-            echo '<td><strong><a href="' . esc_url( get_edit_post_link( $post->ID ) ) . '">' . esc_html( $post->post_title ) . '</a></strong></td>';
+            echo '<td><strong><a href="' . esc_url( get_edit_post_link( $post->ID ) ) . '">' . esc_html( $post->post_title ?: '(No Title)' ) . '</a></strong><br/><small>' . esc_html( $type_label ) . $status_label . '</small></td>';
 
             echo '<td>' . intval( $counts['internal'] );
             if ( $counts['duplicate'] ) {
