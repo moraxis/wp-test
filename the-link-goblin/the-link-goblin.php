@@ -3,7 +3,7 @@
  * Plugin Name: The Link Goblin
  * Plugin URI: https://example.com
  * Description: Private WordPress plugin that uses the DeepSeek API to generate internal linking suggestions via a centralized dashboard and post edit screens.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Nikola Knezhevich
  * Author URI: https://example.com
  * License: GPL2
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
-define( 'THE_LINK_GOBLIN_VERSION', '1.0.0' );
+define( 'THE_LINK_GOBLIN_VERSION', '1.0.1' );
 define( 'THE_LINK_GOBLIN_FILE', __FILE__ );
 define( 'THE_LINK_GOBLIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'THE_LINK_GOBLIN_URL', plugin_dir_url( __FILE__ ) );
