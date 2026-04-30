@@ -34,8 +34,8 @@ class The_Link_Goblin_Scanner {
         global $wpdb;
 
         $post = get_post( $post_id );
-        if ( ! $post || $post->post_status !== 'publish' ) {
-            return new WP_Error( 'invalid_post', 'Post is not published or invalid.' );
+        if ( ! $post ) {
+            return new WP_Error( 'invalid_post', 'Post is invalid.' );
         }
 
         // Get actual text content by stripping tags. For better context we could keep some tags, but plain text is safer for tokens.
@@ -44,10 +44,12 @@ class The_Link_Goblin_Scanner {
             return new WP_Error( 'empty_content', 'Post content is empty.' );
         }
 
+        $post_types = get_post_types( array( 'public' => true ) );
+
         // Fetch up to 100 potential target posts
         $target_posts = get_posts( array(
-            'post_type'      => 'post',
-            'post_status'    => 'publish',
+            'post_type'      => array_keys( $post_types ),
+            'post_status'    => array( 'publish', 'draft', 'pending', 'future', 'private' ),
             'posts_per_page' => 100,
             'exclude'        => array( $post_id ),
             'orderby'        => 'date',
@@ -55,7 +57,7 @@ class The_Link_Goblin_Scanner {
         ) );
 
         if ( empty( $target_posts ) ) {
-            return new WP_Error( 'no_targets', 'No other published posts found to link to.' );
+            return new WP_Error( 'no_targets', 'No other posts found to link to.' );
         }
 
         $targets_json = array();
@@ -134,7 +136,8 @@ class The_Link_Goblin_Scanner {
         foreach ( $suggestions as $sugg ) {
             if ( isset( $sugg['target_id'], $sugg['anchor_text'], $sugg['context_sentence'] ) ) {
                 // Verify target post exists
-                if ( get_post_status( $sugg['target_id'] ) === 'publish' ) {
+                $target_status = get_post_status( $sugg['target_id'] );
+                if ( $target_status ) {
                     $wpdb->insert(
                         $table_name,
                         array(

@@ -74,10 +74,12 @@ class The_Link_Goblin_Dashboard {
 
         $instance = new self();
 
-        // Get all published posts
+        $post_types = get_post_types( array( 'public' => true ) );
+
+        // Get all relevant posts
         $posts = get_posts( array(
-            'post_type'      => 'post',
-            'post_status'    => 'publish',
+            'post_type'      => array_keys( $post_types ),
+            'post_status'    => array( 'publish', 'draft', 'pending', 'future', 'private' ),
             'posts_per_page' => -1,
         ) );
 
@@ -113,8 +115,22 @@ class The_Link_Goblin_Dashboard {
 
             $status_class = ( ! $last_scanned || $needs_rescan ) ? 'tlg-needs-scan' : 'tlg-scanned';
 
+            $type_obj = get_post_type_object( $post->post_type );
+            $type_label = $type_obj ? $type_obj->labels->singular_name : $post->post_type;
+
+            // Format status for display
+            $status_label = $post->post_status;
+            if ( $status_label === 'publish' ) {
+                $status_label = 'Published';
+            } else {
+                $status_label = ucfirst( $status_label );
+            }
+
             echo '<tr data-post-id="' . esc_attr( $post->ID ) . '" class="' . esc_attr( $status_class ) . '">';
-            echo '<td><strong><a href="' . esc_url( get_edit_post_link( $post->ID ) ) . '">' . esc_html( $post->post_title ) . '</a></strong></td>';
+            echo '<td>';
+            echo '<strong><a href="' . esc_url( get_edit_post_link( $post->ID ) ) . '">' . esc_html( $post->post_title ?: '(No Title)' ) . '</a></strong><br>';
+            echo '<span style="color: #666; font-size: 0.9em;">' . esc_html( $type_label ) . ' &mdash; ' . esc_html( $status_label ) . '</span>';
+            echo '</td>';
 
             echo '<td>' . intval( $counts['internal'] );
             if ( $counts['duplicate'] ) {

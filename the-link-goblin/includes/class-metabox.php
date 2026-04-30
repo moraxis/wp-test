@@ -29,14 +29,18 @@ class The_Link_Goblin_Metabox {
     }
 
     public function add_meta_box() {
-        add_meta_box(
-            'the_link_goblin_suggestions_mb',
-            'The Link Goblin - Suggestions',
-            array( $this, 'render_meta_box' ),
-            'post',
-            'side',
-            'high'
-        );
+        $post_types = get_post_types( array( 'public' => true ) );
+
+        foreach ( $post_types as $pt ) {
+            add_meta_box(
+                'the_link_goblin_suggestions_mb',
+                'The Link Goblin - Suggestions',
+                array( $this, 'render_meta_box' ),
+                $pt,
+                'side',
+                'high'
+            );
+        }
     }
 
     public function render_meta_box( $post ) {
@@ -76,9 +80,6 @@ class The_Link_Goblin_Metabox {
     public function check_content_change( $post_id, $post, $update ) {
         // Only care about actual updates, not revisions or autosaves
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-            return;
-        }
-        if ( $post->post_status !== 'publish' ) {
             return;
         }
 
