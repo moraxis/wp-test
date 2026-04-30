@@ -1,0 +1,24 @@
+#tlg-metabox-container .tlg-suggestions-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#tlg-metabox-container .tlg-suggestions-list li {
+    background: #f9f9f9;
+    border-left: 3px solid #f99417; /* Use strict CTA color */
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#tlg-metabox-container .tlg-suggestions-list code {
+    background: #e8e8e8;
+    padding: 2px 4px;
+}
+
+#tlg-metabox-scan-status,
+#tlg-notice-scan-status {
+    margin-left: 10px;
+    font-style: italic;
+    color: #493284;
+}
