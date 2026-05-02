@@ -33,6 +33,12 @@ function plugins_url($path = '', $plugin = '') { return $path; }
 function rest_url($path = '') { return 'http://example.com/wp-json/' . $path; }
 function wp_create_nonce($action = -1) { return 'mock_nonce'; }
 function esc_url_raw($url) { return $url; }
+function wp_verify_nonce($nonce, $action = -1) { return $nonce === 'mock_nonce'; }
+function plugin_dir_path($file) { return dirname(__FILE__) . '/../../image-alt-auditor/'; }
+function plugin_basename($file) { return basename($file); }
+function wp_enqueue_style($handle, $src = '', $deps = array(), $ver = false, $media = 'all') {}
+function wp_enqueue_script($handle, $src = '', $deps = array(), $ver = false, $in_footer = false) {}
+function has_shortcode($content, $tag) { return true; }
 function register_rest_route($namespace, $route, $args = array()) {
     global $mock_rest_routes;
     $mock_rest_routes[$namespace . $route] = $args;

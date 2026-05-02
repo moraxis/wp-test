@@ -1,0 +1,219 @@
+/**
+ * Image Alt Text Auditor Styles
+ * Strict adherence to brand colors:
+ * CTA Buttons: #f99417
+ * General Backgrounds: #ffffff
+ * Input Fields: #fcfcfc
+ * Headings/Placeholders: #493284
+ * Normal Buttons: #362f63
+ * Text: #2d222d
+ */
+
+.iaa-container {
+	background-color: #ffffff;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	padding: 24px;
+	max-width: 800px;
+	margin: 0 auto;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	color: #2d222d;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.iaa-header {
+	margin-bottom: 24px;
+	text-align: center;
+}
+
+.iaa-title {
+	color: #493284;
+	margin-top: 0;
+	margin-bottom: 8px;
+	font-size: 24px;
+	font-weight: 600;
+}
+
+.iaa-description {
+	color: #2d222d;
+	margin: 0;
+	font-size: 16px;
+}
+
+.iaa-form {
+	margin-bottom: 24px;
+}
+
+.iaa-input-group {
+	display: flex;
+	gap: 12px;
+}
+
+.iaa-input {
+	flex: 1;
+	background-color: #fcfcfc;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 12px 16px;
+	font-size: 16px;
+	color: #2d222d;
+	transition: border-color 0.2s;
+}
+
+.iaa-input::placeholder {
+	color: #493284;
+	opacity: 0.7;
+}
+
+.iaa-input:focus {
+	outline: none;
+	border-color: #493284;
+}
+
+.iaa-btn {
+	background-color: #f99417;
+	color: #ffffff;
+	border: none;
+	border-radius: 4px;
+	padding: 12px 24px;
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 0.2s, opacity 0.2s;
+}
+
+.iaa-btn:hover {
+	opacity: 0.9;
+}
+
+.iaa-btn:disabled {
+	background-color: #ccc;
+	cursor: not-allowed;
+}
+
+/* Loading State */
+.iaa-loading {
+	text-align: center;
+	padding: 32px 0;
+	color: #2d222d;
+}
+
+.iaa-spinner {
+	border: 4px solid #fcfcfc;
+	border-top: 4px solid #f99417;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	animation: iaa-spin 1s linear infinite;
+	margin: 0 auto 16px;
+}
+
+@keyframes iaa-spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.iaa-error {
+	background-color: #fff2f2;
+	border-left: 4px solid #dc3232;
+	padding: 16px;
+	margin-bottom: 24px;
+	color: #2d222d;
+	border-radius: 4px;
+}
+
+/* Results */
+.iaa-results-container {
+	margin-top: 32px;
+}
+
+.iaa-results-title {
+	color: #493284;
+	margin-top: 0;
+	margin-bottom: 8px;
+	font-size: 20px;
+}
+
+.iaa-results-summary {
+	color: #2d222d;
+	margin-bottom: 16px;
+	font-weight: 500;
+}
+
+.iaa-table-wrapper {
+	overflow-x: auto;
+}
+
+.iaa-table {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: left;
+}
+
+.iaa-table th {
+	background-color: #fcfcfc;
+	color: #493284;
+	padding: 12px;
+	border-bottom: 2px solid #e0e0e0;
+	font-weight: 600;
+}
+
+.iaa-table td {
+	padding: 12px;
+	border-bottom: 1px solid #e0e0e0;
+	color: #2d222d;
+	vertical-align: middle;
+}
+
+.iaa-thumbnail {
+	width: 48px;
+	height: 48px;
+	object-fit: cover;
+	border-radius: 4px;
+	background-color: #fcfcfc;
+	border: 1px solid #ccc;
+}
+
+.iaa-no-image {
+	width: 48px;
+	height: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #fcfcfc;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 10px;
+	color: #493284;
+	text-align: center;
+}
+
+.iaa-url-link {
+	color: #362f63;
+	text-decoration: none;
+	word-break: break-all;
+}
+
+.iaa-url-link:hover {
+	text-decoration: underline;
+}
+
+.iaa-issue-badge {
+	display: inline-block;
+	padding: 4px 8px;
+	border-radius: 4px;
+	background-color: #362f63;
+	color: #ffffff;
+	font-size: 12px;
+	font-weight: 500;
+}
+
+@media (max-width: 600px) {
+	.iaa-input-group {
+		flex-direction: column;
+	}
+	.iaa-btn {
+		width: 100%;
+	}
+}
