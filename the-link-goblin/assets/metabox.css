@@ -5,10 +5,30 @@
 }
 
 #tlg-metabox-container .tlg-suggestions-list li {
-    background: #f9f9f9;
-    border-left: 3px solid #f99417; /* Use strict CTA color */
+    background: #ffffff !important;
+    border-left: 3px solid #f99417 !important; /* Use strict CTA color */
     padding: 10px;
     margin-bottom: 10px;
+}
+
+#tlg-metabox-container .tlg-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+#tlg-metabox-container .tlg-badge-existing {
+    background-color: #493284 !important;
+    color: #ffffff !important;
+}
+
+#tlg-metabox-container .tlg-badge-new {
+    background-color: #f99417 !important;
+    color: #ffffff !important;
 }
 
 #tlg-metabox-container .tlg-suggestions-list code {

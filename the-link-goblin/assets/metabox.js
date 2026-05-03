@@ -6,13 +6,16 @@ jQuery(document).ready(function($) {
         btn.prop('disabled', true);
         status.text('Scanning... Please wait.');
 
+        var allowNewSuggestions = $('#tlg-allow-new-suggestions').length ? ($('#tlg-allow-new-suggestions').is(':checked') ? 1 : 0) : 1;
+
         $.ajax({
             url: theLinkGoblinMeta.ajax_url,
             type: 'POST',
             data: {
                 action: 'the_link_goblin_scan_post',
                 nonce: theLinkGoblinMeta.nonce,
-                post_id: theLinkGoblinMeta.post_id
+                post_id: theLinkGoblinMeta.post_id,
+                allow_new_suggestions: allowNewSuggestions
             },
             success: function(response) {
                 if (response.success) {

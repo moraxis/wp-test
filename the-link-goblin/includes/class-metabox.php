@@ -59,7 +59,17 @@ class The_Link_Goblin_Metabox {
                 $target_title = get_the_title( $sugg->target_post_id );
                 $target_url   = get_permalink( $sugg->target_post_id );
 
+                $type_label = '';
+                if ( isset( $sugg->is_existing_text ) ) {
+                    if ( $sugg->is_existing_text == 1 ) {
+                        $type_label = '<span class="tlg-badge tlg-badge-existing">Existing Text</span>';
+                    } else {
+                        $type_label = '<span class="tlg-badge tlg-badge-new">New Suggestion</span>';
+                    }
+                }
+
                 echo '<li>';
+                echo $type_label . '<br>';
                 echo '<strong>Anchor:</strong> <code>' . esc_html( $sugg->anchor_text ) . '</code><br>';
                 echo '<strong>Link To:</strong> <a href="' . esc_url( $target_url ) . '" target="_blank">' . esc_html( $target_title ) . '</a><br>';
                 echo '<em>Context:</em> "' . esc_html( $sugg->context_sentence ) . '"';
@@ -71,6 +81,7 @@ class The_Link_Goblin_Metabox {
         }
 
         echo '<hr>';
+        echo '<p><label><input type="checkbox" id="tlg-allow-new-suggestions" checked="checked"> Include new text suggestions if no exact matches found</label></p>';
         echo '<button type="button" id="tlg-metabox-scan-btn" class="button button-primary">Scan For Links</button>';
         echo '<span id="tlg-metabox-scan-status"></span>';
         echo '</div>';
