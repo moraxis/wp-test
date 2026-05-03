@@ -29,14 +29,17 @@ class The_Link_Goblin_Metabox {
     }
 
     public function add_meta_box() {
-        add_meta_box(
-            'the_link_goblin_suggestions_mb',
-            'The Link Goblin - Suggestions',
-            array( $this, 'render_meta_box' ),
-            'post',
-            'side',
-            'high'
-        );
+        $screens = array( 'post', 'page', 'glossary' );
+        foreach ( $screens as $screen ) {
+            add_meta_box(
+                'the_link_goblin_suggestions_mb',
+                'The Link Goblin - Suggestions',
+                array( $this, 'render_meta_box' ),
+                $screen,
+                'side',
+                'high'
+            );
+        }
     }
 
     public function render_meta_box( $post ) {
@@ -74,18 +77,11 @@ class The_Link_Goblin_Metabox {
     }
 
     public function check_content_change( $post_id, $post, $update ) {
-        // Only care about actual updates, not revisions or autosaves
-        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-            return;
-        }
-        if ( $post->post_status !== 'publish' ) {
-            return;
-        }
-
-        // Compare new content with previous content if available
-        // Unfortunately save_post fires after DB update, so comparing requires getting the revision,
-        // or we simply set the flag unconditionally on edit (the simplest and most robust approach).
-        update_post_meta( $post_id, '_the_link_goblin_needs_rescan', '1' );
+        // We moved this functionality to class-scanner.php so it applies everywhere,
+        // but we'll leave this empty or remove the hook above. Since the hook is
+        // in __construct, we'll keep the function signature and just return.
+        // The actual logic is now in class-scanner.php's mark_post_for_rescan method.
+        return;
     }
 
     public function display_scan_notice() {
