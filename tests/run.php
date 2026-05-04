@@ -15,7 +15,8 @@ class TestRunner {
 
     public function run() {
         $testClasses = array(
-            'LLMS_Txt_Validator_Test'
+            'LLMS_Txt_Validator_Test',
+            'The_Link_Goblin_Test'
         );
 
         foreach ($testClasses as $testClass) {
