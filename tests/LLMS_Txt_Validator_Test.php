@@ -39,10 +39,10 @@ class LLMS_Txt_Validator_Test {
         $request = new WP_REST_Request(array('url' => 'https://example.com/llms.txt'));
         $validator->fetch_remote_txt($request);
 
-        if (isset($mock_remote_get_args['limit_response_size']) && $mock_remote_get_args['limit_response_size'] === 1048576) {
-            $runner->recordPass("wp_safe_remote_get includes limit_response_size of 1MB.");
+        if (isset($mock_remote_get_args['limit']) && $mock_remote_get_args['limit'] === 1048576) {
+            $runner->recordPass("wp_safe_remote_get includes limit of 1MB.");
         } else {
-            $runner->recordFail("wp_safe_remote_get missing or incorrect limit_response_size.");
+            $runner->recordFail("wp_safe_remote_get missing or incorrect limit.");
         }
     }
 
