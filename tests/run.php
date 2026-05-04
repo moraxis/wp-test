@@ -5,6 +5,7 @@
 
 require_once __DIR__ . '/mocks/wordpress.php';
 require_once __DIR__ . '/../llms-txt-validator/llms-txt-validator.php';
+require_once __DIR__ . '/../serp-preview-simulator/serp-preview-simulator.php';
 
 // Trigger the rest_api_init action to register routes
 do_action('rest_api_init');
