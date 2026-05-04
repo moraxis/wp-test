@@ -162,6 +162,9 @@ class The_Link_Goblin_Scanner {
         $clean_content = preg_replace('/\s+/', ' ', strtolower( $content ) );
 
         $inserted = 0;
+        $values   = array();
+        $placeholders = array();
+
         foreach ( $suggestions as $sugg ) {
             if ( isset( $sugg['target_id'], $sugg['anchor_text'], $sugg['context_sentence'] ) ) {
                 // Verify target post exists
@@ -181,21 +184,22 @@ class The_Link_Goblin_Scanner {
                         continue;
                     }
 
-                    $wpdb->insert(
-                        $table_name,
-                        array(
-                            'post_id'          => $post_id,
-                            'target_post_id'   => intval( $sugg['target_id'] ),
-                            'anchor_text'      => sanitize_text_field( $sugg['anchor_text'] ),
-                            'context_sentence' => sanitize_text_field( $sugg['context_sentence'] ),
-                            'is_existing_text' => $is_existing,
-                            'created_at'       => current_time('mysql')
-                        ),
-                        array( '%d', '%d', '%s', '%s', '%d', '%s' )
-                    );
+                    $values[] = $post_id;
+                    $values[] = intval( $sugg['target_id'] );
+                    $values[] = sanitize_text_field( $sugg['anchor_text'] );
+                    $values[] = sanitize_text_field( $sugg['context_sentence'] );
+                    $values[] = $is_existing;
+                    $values[] = current_time('mysql');
+
+                    $placeholders[] = "(%d, %d, %s, %s, %d, %s)";
                     $inserted++;
                 }
             }
+        }
+
+        if ( ! empty( $values ) ) {
+            $query = "INSERT INTO $table_name (post_id, target_post_id, anchor_text, context_sentence, is_existing_text, created_at) VALUES " . implode( ', ', $placeholders );
+            $wpdb->query( $wpdb->prepare( $query, $values ) );
         }
 
         // Update meta so we know it has been scanned
