@@ -78,6 +78,7 @@ class SERP_Preview_Simulator {
                 </div>
 
                 <div class="serp-sim-tab-content" id="tab-structured-data">
+                    <div id="sim-jsonld-error" class="sim-error-message sim-hidden"></div>
                     <div class="sim-input-group">
                         <label for="sim-input-jsonld">Structured Data (JSON-LD)</label>
                         <textarea id="sim-input-jsonld" name="sim-input-jsonld"></textarea>
