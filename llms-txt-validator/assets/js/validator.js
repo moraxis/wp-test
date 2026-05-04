@@ -122,9 +122,8 @@ jQuery(document).ready(function($) {
         if (errors.length === 0) {
             errorList.append('<li class="llms-no-errors">✓ All checks passed! Your llms.txt looks good.</li>');
         } else {
-            errors.forEach(err => {
-                errorList.append(`<li><span class="llms-error-line">Line ${err.line}:</span> ${err.message}</li>`);
-            });
+            const html = errors.map(err => `<li><span class="llms-error-line">Line ${err.line}:</span> ${err.message}</li>`).join('');
+            errorList.append(html);
         }
     }
 
