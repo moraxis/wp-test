@@ -57,6 +57,84 @@ class WP_Error {
 
 function is_wp_error($thing) { return $thing instanceof WP_Error; }
 
+function wp_strip_all_tags($text) { return strip_tags($text); }
+
+function get_post($post_id) {
+    return (object) array(
+        'ID' => $post_id,
+        'post_content' => 'Test content.',
+        'post_status' => 'publish',
+        'post_title' => 'Test Post',
+        'post_type' => 'post'
+    );
+}
+
+function get_permalink($post_id) { return "http://example.com/p/$post_id"; }
+
+function get_posts($args) {
+    return array(
+        (object) array('ID' => 101, 'post_title' => 'Target 1'),
+    );
+}
+
+function get_option($option, $default = false) {
+    if ($option === 'the_link_goblin_api_key') return 'mock_key';
+    return $default;
+}
+
+function wp_trim_words($text, $num_words = 55, $more = null) { return $text; }
+
+function wp_json_encode($data) { return json_encode($data); }
+
+function wp_safe_remote_post($url, $args) {
+    $suggestions = array(
+        array('target_id' => 101, 'anchor_text' => 'Test', 'context_sentence' => 'Test content.'),
+        array('target_id' => 101, 'anchor_text' => 'Test', 'context_sentence' => 'Test content.'),
+        array('target_id' => 101, 'anchor_text' => 'Test', 'context_sentence' => 'Test content.'),
+    );
+
+    return array(
+        'response' => array('code' => 200),
+        'body' => json_encode(array(
+            'choices' => array(
+                array(
+                    'message' => array(
+                        'content' => json_encode($suggestions)
+                    )
+                )
+            )
+        ))
+    );
+}
+
+function get_post_status($post_id) { return 'publish'; }
+
+function sanitize_text_field($text) { return $text; }
+
+function current_time($type) { return date('Y-m-d H:i:s'); }
+
+function update_post_meta($post_id, $meta_key, $meta_value) {}
+
+function delete_post_meta($post_id, $meta_key) {}
+
+function get_edit_post_link($post_id) { return "http://example.com/wp-admin/post.php?post=$post_id&action=edit"; }
+
+function get_the_title($post_id) { return "Post $post_id"; }
+
+function get_post_type_object($post_type) {
+    return (object) array(
+        'labels' => (object) array(
+            'singular_name' => ucfirst($post_type)
+        )
+    );
+}
+
+function home_url() { return 'http://example.com'; }
+
+function wp_parse_url($url, $component = -1) { return parse_url($url, $component); }
+
+function admin_url($path) { return 'http://example.com/wp-admin/' . $path; }
+
 $current_user_can_return = true;
 function current_user_can($capability) {
     global $current_user_can_return;

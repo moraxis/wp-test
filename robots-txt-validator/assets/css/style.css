@@ -22,6 +22,10 @@
     color: #493284;
 }
 
+.robots-results-panel .robots-results-title {
+    font-size: 22px;
+}
+
 .robots-validator-title {
     font-size: 2em;
     margin-bottom: 20px;
@@ -43,6 +47,12 @@
     border-radius: 4px;
     color: #2d222d;
     background-color: #fcfcfc;
+}
+
+#robots-test-path:focus,
+#robots-test-agent:focus,
+#robots-test-agent-custom:focus {
+    background-color: #fcfcfc !important;
 }
 
 .robots-btn-cta {
