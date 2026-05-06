@@ -56,6 +56,7 @@ function add_settings_field($id, $title, $callback, $page, $section = 'default',
 $mock_options = array();
 function get_option($option, $default = false) {
     global $mock_options;
+    if ($option === 'the_link_goblin_api_key' && !isset($mock_options[$option])) return 'mock_key';
     return isset($mock_options[$option]) ? $mock_options[$option] : $default;
 }
 
@@ -117,11 +118,6 @@ function get_posts($args) {
     );
 }
 
-function get_option($option, $default = false) {
-    if ($option === 'the_link_goblin_api_key') return 'mock_key';
-    return $default;
-}
-
 function wp_trim_words($text, $num_words = 55, $more = null) { return $text; }
 
 function wp_json_encode($data) { return json_encode($data); }
@@ -148,8 +144,6 @@ function wp_safe_remote_post($url, $args) {
 }
 
 function get_post_status($post_id) { return 'publish'; }
-
-function sanitize_text_field($text) { return $text; }
 
 function current_time($type) { return date('Y-m-d H:i:s'); }
 
