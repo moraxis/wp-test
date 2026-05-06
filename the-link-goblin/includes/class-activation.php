@@ -17,6 +17,7 @@ class The_Link_Goblin_Activation {
             target_post_id bigint(20) unsigned NOT NULL,
             anchor_text text NOT NULL,
             context_sentence text NOT NULL,
+            is_existing_text tinyint(1) DEFAULT 1 NOT NULL,
             created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
             PRIMARY KEY  (id),
             KEY post_id (post_id),

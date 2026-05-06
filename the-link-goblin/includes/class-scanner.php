@@ -7,6 +7,22 @@ class The_Link_Goblin_Scanner {
 
     public function __construct() {
         add_action( 'wp_ajax_the_link_goblin_scan_post', array( $this, 'ajax_scan_post' ) );
+        add_action( 'save_post', array( $this, 'mark_post_for_rescan' ), 10, 3 );
+    }
+
+    public function mark_post_for_rescan( $post_id, $post, $update ) {
+        // Only care about post, page, glossary
+        if ( ! in_array( $post->post_type, array( 'post', 'page', 'glossary' ) ) ) {
+            return;
+        }
+
+        // Don't run on autosave
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return;
+        }
+
+        // Only mark if it's an update, or if we want new posts to be marked too
+        update_post_meta( $post_id, '_the_link_goblin_needs_rescan', '1' );
     }
 
     public function ajax_scan_post() {
@@ -17,11 +33,13 @@ class The_Link_Goblin_Scanner {
         }
 
         $post_id = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
+        $allow_new = isset( $_POST['allow_new_suggestions'] ) ? intval( $_POST['allow_new_suggestions'] ) : 1;
+
         if ( ! $post_id ) {
             wp_send_json_error( array( 'message' => 'Invalid post ID' ) );
         }
 
-        $result = $this->scan_post( $post_id );
+        $result = $this->scan_post( $post_id, $allow_new );
 
         if ( is_wp_error( $result ) ) {
             wp_send_json_error( array( 'message' => $result->get_error_message() ) );
@@ -30,12 +48,12 @@ class The_Link_Goblin_Scanner {
         wp_send_json_success( array( 'message' => 'Scan complete', 'suggestions_count' => $result ) );
     }
 
-    public function scan_post( $post_id ) {
+    public function scan_post( $post_id, $allow_new = 1 ) {
         global $wpdb;
 
         $post = get_post( $post_id );
-        if ( ! $post || $post->post_status !== 'publish' ) {
-            return new WP_Error( 'invalid_post', 'Post is not published or invalid.' );
+        if ( ! $post || in_array( $post->post_status, array( 'trash', 'auto-draft' ) ) ) {
+            return new WP_Error( 'invalid_post', 'Post is invalid or trashed.' );
         }
 
         // Get actual text content by stripping tags. For better context we could keep some tags, but plain text is safer for tokens.
@@ -46,7 +64,7 @@ class The_Link_Goblin_Scanner {
 
         // Fetch up to 100 potential target posts
         $target_posts = get_posts( array(
-            'post_type'      => 'post',
+            'post_type'      => array( 'post', 'page', 'glossary' ),
             'post_status'    => 'publish',
             'posts_per_page' => 100,
             'exclude'        => array( $post_id ),
@@ -73,7 +91,15 @@ class The_Link_Goblin_Scanner {
         }
         $model = get_option( 'the_link_goblin_api_model', 'deepseek-chat' );
 
-        $prompt = "Analyze the following content and suggest 3-5 contextually relevant internal links to other existing posts from the provided target posts list.\n";
+        $prompt = "Analyze the following Content and suggest 3-5 contextually relevant internal links to other existing posts from the provided Target Posts list.\n";
+        $prompt .= "CRITICAL INSTRUCTION: Your primary goal is to find an EXISTING sentence exactly as it appears in the Content that is highly relevant to one of the target posts. Extract that exact sentence for 'context_sentence' and extract the exact phrase within it to be the 'anchor_text'. The text must match the provided Content verbatim.\n";
+
+        if ( ! $allow_new ) {
+            $prompt .= "STRICT REQUIREMENT: You are FORBIDDEN from suggesting new sentences or modifying existing ones. If you cannot find suitable existing text in the Content, return an empty array.\n";
+        } else {
+            $prompt .= "If and ONLY IF there are no good opportunities using existing text, you may suggest a new sentence or modify a sentence to better fit the link.\n";
+        }
+
         $prompt .= "Return ONLY a valid JSON array of objects with the exact keys: 'target_id', 'anchor_text', 'context_sentence'. Do not include markdown code block formatting like ```json ... ```, just output the raw JSON array.\n\n";
         $prompt .= "Content:\n" . wp_trim_words( $content, 1500, '...' ) . "\n\n";
         $prompt .= "Target Posts (JSON):\n" . wp_json_encode( $targets_json );
@@ -130,25 +156,50 @@ class The_Link_Goblin_Scanner {
         $table_name = $wpdb->prefix . 'the_link_goblin_suggestions';
         $wpdb->delete( $table_name, array( 'post_id' => $post_id ), array( '%d' ) );
 
+        // We will do a case-insensitive check against the stripped content
+        // to see if the AI hallucinated or actually returned an exact match.
+        // It's possible the LLM returns a match but with slightly different spacing.
+        $clean_content = preg_replace('/\s+/', ' ', strtolower( $content ) );
+
         $inserted = 0;
+        $values   = array();
+        $placeholders = array();
+
         foreach ( $suggestions as $sugg ) {
             if ( isset( $sugg['target_id'], $sugg['anchor_text'], $sugg['context_sentence'] ) ) {
                 // Verify target post exists
                 if ( get_post_status( $sugg['target_id'] ) === 'publish' ) {
-                    $wpdb->insert(
-                        $table_name,
-                        array(
-                            'post_id'          => $post_id,
-                            'target_post_id'   => intval( $sugg['target_id'] ),
-                            'anchor_text'      => sanitize_text_field( $sugg['anchor_text'] ),
-                            'context_sentence' => sanitize_text_field( $sugg['context_sentence'] ),
-                            'created_at'       => current_time('mysql')
-                        ),
-                        array( '%d', '%d', '%s', '%s', '%s' )
-                    );
+                    $is_existing = 0;
+
+                    // Check if anchor or context exists in the content
+                    $clean_context = preg_replace('/\s+/', ' ', strtolower( $sugg['context_sentence'] ) );
+                    $clean_anchor = preg_replace('/\s+/', ' ', strtolower( $sugg['anchor_text'] ) );
+
+                    if ( strpos( $clean_content, $clean_context ) !== false || strpos( $clean_content, $clean_anchor ) !== false ) {
+                        $is_existing = 1;
+                    }
+
+                    // If we strictly don't allow new suggestions and it's not existing, skip it
+                    if ( ! $allow_new && ! $is_existing ) {
+                        continue;
+                    }
+
+                    $values[] = $post_id;
+                    $values[] = intval( $sugg['target_id'] );
+                    $values[] = sanitize_text_field( $sugg['anchor_text'] );
+                    $values[] = sanitize_text_field( $sugg['context_sentence'] );
+                    $values[] = $is_existing;
+                    $values[] = current_time('mysql');
+
+                    $placeholders[] = "(%d, %d, %s, %s, %d, %s)";
                     $inserted++;
                 }
             }
+        }
+
+        if ( ! empty( $values ) ) {
+            $query = "INSERT INTO $table_name (post_id, target_post_id, anchor_text, context_sentence, is_existing_text, created_at) VALUES " . implode( ', ', $placeholders );
+            $wpdb->query( $wpdb->prepare( $query, $values ) );
         }
 
         // Update meta so we know it has been scanned

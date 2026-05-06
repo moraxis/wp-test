@@ -145,12 +145,14 @@ jQuery(document).ready(function($) {
     }
 
     const $sdFeaturesContainer = $('#sim-preview-sd-features');
+    const $jsonldError = $('#sim-jsonld-error');
 
     function parseAndRenderJSONLD(jsonStr) {
         // Reset JSON-specific visual elements
         $previewBreadcrumbs.empty().addClass('sim-hidden');
         $sdFeaturesContainer.empty();
         $previewRatingWrap.data('from-json', false);
+        $jsonldError.text('').addClass('sim-hidden');
 
         // Only hide rating if the override checkbox is NOT checked
         if (!$chkRating.is(':checked')) {
@@ -166,7 +168,8 @@ jQuery(document).ready(function($) {
         try {
             parsedData = JSON.parse(jsonStr);
         } catch (e) {
-            // Invalid JSON, just return and let the user fix it
+            // Invalid JSON, show error and let the user fix it
+            $jsonldError.text('Invalid JSON: ' + e.message).removeClass('sim-hidden');
             updatePreview();
             return;
         }
