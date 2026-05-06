@@ -49,6 +49,34 @@ jQuery(document).ready(function($) {
         let currentSection = null;
         let hasBlockquote = false;
 
+        /**
+         * Helper to parse headings and update validation state.
+         */
+        const handleHeading = (trimmed, lineNum, index) => {
+            const match = trimmed.match(/^(#+)\s+(.*)/);
+            if (!match) {
+                errors.push({ line: lineNum, message: 'Malformed heading. Make sure there is a space after the `#`.' });
+                return;
+            }
+
+            const level = match[1].length;
+            if (level === 1) {
+                h1Count++;
+                if (h1Count > 1) {
+                    errors.push({ line: lineNum, message: 'Only one H1 (# Title) is allowed, and it must be at the very beginning.' });
+                }
+                if (index !== firstNonEmptyLineIndex) {
+                    errors.push({ line: lineNum, message: 'The H1 (# Title) must be the first section in the file.' });
+                }
+                hasH1 = true;
+                currentSection = 'h1';
+            } else if (level === 2) {
+                currentSection = 'h2';
+            } else if (level > 2) {
+                errors.push({ line: lineNum, message: `Heading level H${level} is not allowed. Only H1 and H2 are permitted.` });
+            }
+        };
+
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
             const trimmed = line.trim();
@@ -58,29 +86,7 @@ jQuery(document).ready(function($) {
 
             // Check headings
             if (trimmed.startsWith('#')) {
-                const match = trimmed.match(/^(#+)\s+(.*)/);
-                if (match) {
-                    const level = match[1].length;
-
-                    if (level === 1) {
-                        h1Count++;
-                        if (h1Count > 1) {
-                            errors.push({ line: lineNum, message: 'Only one H1 (# Title) is allowed, and it must be at the very beginning.' });
-                        }
-                        if (i !== firstNonEmptyLineIndex) {
-                            errors.push({ line: lineNum, message: 'The H1 (# Title) must be the first section in the file.' });
-                        }
-                        hasH1 = true;
-                        currentSection = 'h1';
-                    } else if (level === 2) {
-                        currentSection = 'h2';
-                    } else if (level > 2) {
-                        errors.push({ line: lineNum, message: `Heading level H${level} is not allowed. Only H1 and H2 are permitted.` });
-                    }
-                } else {
-                     // Starts with # but no space
-                     errors.push({ line: lineNum, message: 'Malformed heading. Make sure there is a space after the `#`.' });
-                }
+                handleHeading(trimmed, lineNum, i);
             } else if (trimmed.startsWith('>')) {
                 // We expect a blockquote shortly after H1
                 hasBlockquote = true;

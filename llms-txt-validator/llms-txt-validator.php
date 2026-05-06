@@ -2,7 +2,7 @@
 /**
  * Plugin Name: LLMS.txt Validator
  * Description: A shortcode-based plugin to validate llms.txt files according to the standard specifications. Use shortcode [llms_txt_validator].
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Jules
  */
 
@@ -29,8 +29,8 @@ class LLMS_Txt_Validator {
         wp_register_script('codemirror-js', 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js', array(), '5.65.13', true);
         wp_register_script('codemirror-markdown', 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/markdown/markdown.min.js', array('codemirror-js'), '5.65.13', true);
 
-        wp_register_style('llms-validator-style', plugins_url('assets/css/style.css', __FILE__), array(), '1.0.0');
-        wp_register_script('llms-validator-script', plugins_url('assets/js/validator.js', __FILE__), array('jquery', 'codemirror-js', 'codemirror-markdown'), '1.0.0', true);
+        wp_register_style('llms-validator-style', plugins_url('assets/css/style.css', __FILE__), array(), '1.0.1');
+        wp_register_script('llms-validator-script', plugins_url('assets/js/validator.js', __FILE__), array('jquery', 'codemirror-js', 'codemirror-markdown'), '1.0.1', true);
 
         wp_localize_script('llms-validator-script', 'llmsValidatorConfig', array(
             'restUrl' => esc_url_raw(rest_url('llms-validator/v1/fetch')),
