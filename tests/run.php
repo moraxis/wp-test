@@ -6,6 +6,8 @@
 require_once __DIR__ . '/mocks/wordpress.php';
 require_once __DIR__ . '/../llms-txt-validator/llms-txt-validator.php';
 require_once __DIR__ . '/../the-link-goblin/includes/class-settings.php';
+require_once __DIR__ . '/../link-velocity-calculator/link-velocity-calculator.php';
+require_once __DIR__ . '/../serp-preview-simulator/serp-preview-simulator.php';
 
 // Trigger the rest_api_init action to register routes
 do_action('rest_api_init');
@@ -20,6 +22,8 @@ class TestRunner {
         $testClasses = array(
             'LLMS_Txt_Validator_Test',
             'The_Link_Goblin_Settings_Test'
+            'Link_Velocity_Calculator_Test'
+            'The_Link_Goblin_Test'
         );
 
         foreach ($testClasses as $testClass) {
