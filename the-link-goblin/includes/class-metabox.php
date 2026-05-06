@@ -52,6 +52,27 @@ class The_Link_Goblin_Metabox {
         ) );
 
         echo '<div id="tlg-metabox-container">';
+        echo '<div id="tlg-suggestions-wrapper">';
+        echo self::render_suggestions_html( $post->ID );
+        echo '</div>'; // End wrapper
+
+        echo '<hr>';
+        echo '<p><label><input type="checkbox" id="tlg-allow-new-suggestions" checked="checked"> Include new text suggestions if no exact matches found</label></p>';
+        echo '<button type="button" id="tlg-metabox-scan-btn" class="button button-primary">Scan For Links</button>';
+        echo '<span id="tlg-metabox-scan-status"></span>';
+        echo '</div>';
+    }
+
+    public static function render_suggestions_html( $post_id ) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'the_link_goblin_suggestions';
+
+        $suggestions = $wpdb->get_results( $wpdb->prepare(
+            "SELECT * FROM $table_name WHERE post_id = %d ORDER BY created_at DESC",
+            $post_id
+        ) );
+
+        ob_start();
 
         if ( ! empty( $suggestions ) ) {
             echo '<ul class="tlg-suggestions-list">';
@@ -68,11 +89,12 @@ class The_Link_Goblin_Metabox {
                     }
                 }
 
-                echo '<li>';
+                echo '<li data-suggestion-id="' . esc_attr( $sugg->id ) . '" data-target-id="' . esc_attr( $sugg->target_post_id ) . '">';
                 echo $type_label . '<br>';
                 echo '<strong>Anchor:</strong> <code>' . esc_html( $sugg->anchor_text ) . '</code><br>';
                 echo '<strong>Link To:</strong> <a href="' . esc_url( $target_url ) . '" target="_blank">' . esc_html( $target_title ) . '</a><br>';
-                echo '<em>Context:</em> "' . esc_html( $sugg->context_sentence ) . '"';
+                echo '<em>Context:</em> "' . esc_html( $sugg->context_sentence ) . '"<br>';
+                echo '<button type="button" class="button tlg-mark-added-btn" style="margin-top: 8px;">Mark as Added</button>';
                 echo '</li>';
             }
             echo '</ul>';
@@ -80,11 +102,7 @@ class The_Link_Goblin_Metabox {
             echo '<p id="tlg-no-suggestions">No suggestions available. Scan the post to get started.</p>';
         }
 
-        echo '<hr>';
-        echo '<p><label><input type="checkbox" id="tlg-allow-new-suggestions" checked="checked"> Include new text suggestions if no exact matches found</label></p>';
-        echo '<button type="button" id="tlg-metabox-scan-btn" class="button button-primary">Scan For Links</button>';
-        echo '<span id="tlg-metabox-scan-status"></span>';
-        echo '</div>';
+        return ob_get_clean();
     }
 
     public function check_content_change( $post_id, $post, $update ) {
