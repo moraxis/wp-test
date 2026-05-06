@@ -1,0 +1,10 @@
+{
+    "name": "jules/llms-txt-validator-tests",
+    "description": "Tests for LLMS.txt Validator",
+    "authors": [
+        {
+            "name": "Nikola Knezhevich"
+        }
+    ],
+    "require": {}
+}

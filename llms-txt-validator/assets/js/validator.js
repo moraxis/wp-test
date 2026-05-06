@@ -18,6 +18,9 @@ jQuery(document).ready(function($) {
 
     const errorList = $('#llms-validation-errors');
 
+    const headingRegex = /^(#+)\s+(.*)/;
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/;
+
     // Validation logic
     function validateContent() {
         const content = editor.getValue();
@@ -32,14 +35,6 @@ jQuery(document).ready(function($) {
         let hasH1 = false;
         let h1Count = 0;
         let firstNonEmptyLineIndex = -1;
-
-        // Pass 1: Find first non-empty line
-        for (let i = 0; i < lines.length; i++) {
-            if (lines[i].trim() !== '') {
-                firstNonEmptyLineIndex = i;
-                break;
-            }
-        }
 
         // Clear previous highlights
         editor.eachLine(function(line) {
@@ -84,9 +79,36 @@ jQuery(document).ready(function($) {
 
             if (trimmed === '') continue;
 
+            // Track the first non-empty line index to ensure H1 is at the top
+            if (firstNonEmptyLineIndex === -1) {
+                firstNonEmptyLineIndex = i;
+            }
+
             // Check headings
             if (trimmed.startsWith('#')) {
-                handleHeading(trimmed, lineNum, i);
+                const match = trimmed.match(headingRegex);
+                if (match) {
+                    const level = match[1].length;
+
+                    if (level === 1) {
+                        h1Count++;
+                        if (h1Count > 1) {
+                            errors.push({ line: lineNum, message: 'Only one H1 (# Title) is allowed, and it must be at the very beginning.' });
+                        }
+                        if (i !== firstNonEmptyLineIndex) {
+                            errors.push({ line: lineNum, message: 'The H1 (# Title) must be the first section in the file.' });
+                        }
+                        hasH1 = true;
+                        currentSection = 'h1';
+                    } else if (level === 2) {
+                        currentSection = 'h2';
+                    } else if (level > 2) {
+                        errors.push({ line: lineNum, message: `Heading level H${level} is not allowed. Only H1 and H2 are permitted.` });
+                    }
+                } else {
+                     // Starts with # but no space
+                     errors.push({ line: lineNum, message: 'Malformed heading. Make sure there is a space after the `#`.' });
+                }
             } else if (trimmed.startsWith('>')) {
                 // We expect a blockquote shortly after H1
                 hasBlockquote = true;
@@ -95,7 +117,6 @@ jQuery(document).ready(function($) {
                 if (currentSection === 'h2') {
                     // It should contain a link [name](url)
                     // The spec says: "Each 'file list' is a markdown list, containing a required markdown hyperlink [name](url), then optionally a : and notes"
-                    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/;
                     if (!linkRegex.test(trimmed)) {
                         errors.push({ line: lineNum, message: 'List items under an H2 section must contain a valid Markdown link [name](url).' });
                     }
@@ -129,9 +150,8 @@ jQuery(document).ready(function($) {
         if (errors.length === 0) {
             errorList.append('<li class="llms-no-errors">✓ All checks passed! Your llms.txt looks good.</li>');
         } else {
-            errors.forEach(err => {
-                errorList.append(`<li><span class="llms-error-line">Line ${err.line}:</span> ${err.message}</li>`);
-            });
+            const html = errors.map(err => `<li><span class="llms-error-line">Line ${err.line}:</span> ${err.message}</li>`).join('');
+            errorList.append(html);
         }
     }
 
@@ -159,6 +179,9 @@ jQuery(document).ready(function($) {
             url: llmsValidatorConfig.restUrl,
             method: 'GET',
             data: { url: url },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-WP-Nonce', llmsValidatorConfig.nonce);
+            },
             success: function(response) {
                 btn.prop('disabled', false).text('Fetch URL');
                 if (response.success) {

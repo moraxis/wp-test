@@ -1,0 +1,11 @@
+.tlg-duplicate-warning {
+    color: #f99417; /* Memory strictly specifies this color for CTA/warnings */
+    cursor: help;
+}
+.tlg-success-icon {
+    color: #46b450;
+    vertical-align: middle;
+}
+.tlg-scanning {
+    opacity: 0.6;
+}
