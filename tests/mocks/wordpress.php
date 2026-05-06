@@ -147,9 +147,27 @@ function get_post_status($post_id) { return 'publish'; }
 
 function current_time($type) { return date('Y-m-d H:i:s'); }
 
-function update_post_meta($post_id, $meta_key, $meta_value) {}
+$mock_post_meta = array();
 
-function delete_post_meta($post_id, $meta_key) {}
+function get_post_meta($post_id, $key = '', $single = false) {
+    global $mock_post_meta;
+    if (isset($mock_post_meta[$post_id][$key])) {
+        return $single ? $mock_post_meta[$post_id][$key][0] : $mock_post_meta[$post_id][$key];
+    }
+    return $single ? '' : array();
+}
+
+function update_post_meta($post_id, $meta_key, $meta_value) {
+    global $mock_post_meta;
+    $mock_post_meta[$post_id][$meta_key] = array($meta_value);
+    return true;
+}
+
+function delete_post_meta($post_id, $meta_key) {
+    global $mock_post_meta;
+    unset($mock_post_meta[$post_id][$meta_key]);
+    return true;
+}
 
 function get_edit_post_link($post_id) { return "http://example.com/wp-admin/post.php?post=$post_id&action=edit"; }
 

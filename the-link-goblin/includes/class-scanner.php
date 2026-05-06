@@ -7,7 +7,58 @@ class The_Link_Goblin_Scanner {
 
     public function __construct() {
         add_action( 'wp_ajax_the_link_goblin_scan_post', array( $this, 'ajax_scan_post' ) );
+        add_action( 'wp_ajax_the_link_goblin_get_suggestions', array( $this, 'ajax_get_suggestions' ) );
+        add_action( 'wp_ajax_the_link_goblin_mark_added', array( $this, 'ajax_mark_added' ) );
         add_action( 'save_post', array( $this, 'mark_post_for_rescan' ), 10, 3 );
+    }
+
+    public function ajax_mark_added() {
+        check_ajax_referer( 'the_link_goblin_scan_nonce', 'nonce' );
+
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+        }
+
+        $post_id = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
+        $suggestion_id = isset( $_POST['suggestion_id'] ) ? intval( $_POST['suggestion_id'] ) : 0;
+        $target_id = isset( $_POST['target_id'] ) ? intval( $_POST['target_id'] ) : 0;
+
+        if ( ! $post_id || ! $suggestion_id || ! $target_id ) {
+            wp_send_json_error( array( 'message' => 'Invalid parameters' ) );
+        }
+
+        // Add to excluded targets so it isn't suggested again
+        $added_targets = get_post_meta( $post_id, '_tlg_added_targets', true );
+        if ( ! is_array( $added_targets ) ) {
+            $added_targets = array();
+        }
+        if ( ! in_array( $target_id, $added_targets ) ) {
+            $added_targets[] = $target_id;
+            update_post_meta( $post_id, '_tlg_added_targets', $added_targets );
+        }
+
+        // Delete from the suggestions table
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'the_link_goblin_suggestions';
+        $wpdb->delete( $table_name, array( 'id' => $suggestion_id, 'post_id' => $post_id ), array( '%d', '%d' ) );
+
+        wp_send_json_success( array( 'message' => 'Marked as added and removed suggestion.' ) );
+    }
+
+    public function ajax_get_suggestions() {
+        check_ajax_referer( 'the_link_goblin_scan_nonce', 'nonce' );
+
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+        }
+
+        $post_id = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
+        if ( ! $post_id ) {
+            wp_send_json_error( array( 'message' => 'Invalid post ID' ) );
+        }
+
+        $html = The_Link_Goblin_Metabox::render_suggestions_html( $post_id );
+        wp_send_json_success( array( 'html' => $html ) );
     }
 
     public function mark_post_for_rescan( $post_id, $post, $update ) {
@@ -62,12 +113,20 @@ class The_Link_Goblin_Scanner {
             return new WP_Error( 'empty_content', 'Post content is empty.' );
         }
 
+        // Get already added targets to exclude them
+        $added_targets = get_post_meta( $post_id, '_tlg_added_targets', true );
+        if ( ! is_array( $added_targets ) ) {
+            $added_targets = array();
+        }
+
+        $exclude_ids = array_merge( array( $post_id ), $added_targets );
+
         // Fetch up to 100 potential target posts
         $target_posts = get_posts( array(
             'post_type'      => array( 'post', 'page', 'glossary' ),
             'post_status'    => 'publish',
             'posts_per_page' => 100,
-            'exclude'        => array( $post_id ),
+            'exclude'        => $exclude_ids,
             'orderby'        => 'date',
             'order'          => 'DESC',
         ) );
@@ -171,18 +230,24 @@ class The_Link_Goblin_Scanner {
                 if ( get_post_status( $sugg['target_id'] ) === 'publish' ) {
                     $is_existing = 0;
 
-                    // Check if anchor or context exists in the content
-                    $clean_context = preg_replace('/\s+/', ' ', strtolower( $sugg['context_sentence'] ) );
-                    $clean_anchor = preg_replace('/\s+/', ' ', strtolower( $sugg['anchor_text'] ) );
+                    // Normalize spacing and case for matching
+                    $clean_context = trim( preg_replace( '/\s+/', ' ', strtolower( $sugg['context_sentence'] ) ) );
+                    $clean_anchor = trim( preg_replace( '/\s+/', ' ', strtolower( $sugg['anchor_text'] ) ) );
 
-                    if ( strpos( $clean_content, $clean_context ) !== false || strpos( $clean_content, $clean_anchor ) !== false ) {
-                        $is_existing = 1;
-                    }
+                    $anchor_in_context = strpos( $clean_context, $clean_anchor ) !== false;
+                    $context_in_content = strpos( $clean_content, $clean_context ) !== false;
 
-                    // If we strictly don't allow new suggestions and it's not existing, skip it
-                    if ( ! $allow_new && ! $is_existing ) {
+                    // Strictly drop if the anchor is not within the context sentence
+                    if ( ! $anchor_in_context ) {
                         continue;
                     }
+
+                    // If we strictly don't allow new suggestions and the context isn't exactly in the content, skip it
+                    if ( ! $allow_new && ! $context_in_content ) {
+                        continue;
+                    }
+
+                    $is_existing = $context_in_content ? 1 : 0;
 
                     $values[] = $post_id;
                     $values[] = intval( $sugg['target_id'] );
