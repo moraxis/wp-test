@@ -150,16 +150,20 @@ class The_Link_Goblin_Scanner {
         }
         $model = get_option( 'the_link_goblin_api_model', 'deepseek-chat' );
 
-        $prompt = "Analyze the following Content and suggest 3-5 contextually relevant internal links to other existing posts from the provided Target Posts list.\n";
-        $prompt .= "CRITICAL INSTRUCTION: Your primary goal is to find an EXISTING sentence exactly as it appears in the Content that is highly relevant to one of the target posts. Extract that exact sentence for 'context_sentence' and extract the exact phrase within it to be the 'anchor_text'. The text must match the provided Content verbatim.\n";
+        $prompt = "Analyze the following Content and suggest 1-5 highly relevant internal links to other existing posts from the provided Target Posts list.\n";
+        $prompt .= "CRITICAL INSTRUCTIONS:\n";
+        $prompt .= "1. Your primary goal is to find an EXISTING sentence exactly as it appears in the Content. Extract that exact sentence for 'context_sentence' and extract the exact phrase within it to be the 'anchor_text'. The text must match the provided Content verbatim.\n";
+        $prompt .= "2. STRICT SEMANTIC MATCHING: The 'anchor_text' you select MUST be highly relevant, synonymous, or a direct match to the target post's 'title'.\n";
+        $prompt .= "3. NO TANGENTIAL LINKS: You are explicitly forbidden from making loose associations. For example, do not link the phrase 'Crawl demand' to a target post titled 'Robots.txt Tester' just because they share a broad SEO context. A user clicking the anchor text must expect to land on a page primarily about that exact topic.\n";
+        $prompt .= "4. If you cannot find a highly relevant match between an anchor phrase in the text and a target title, skip it. It is better to return 0 suggestions than bad suggestions.\n";
 
         if ( ! $allow_new ) {
-            $prompt .= "STRICT REQUIREMENT: You are FORBIDDEN from suggesting new sentences or modifying existing ones. If you cannot find suitable existing text in the Content, return an empty array.\n";
+            $prompt .= "5. STRICT TEXT REQUIREMENT: You are FORBIDDEN from suggesting new sentences or modifying existing ones. If you cannot find suitable existing text in the Content, return an empty array.\n";
         } else {
-            $prompt .= "If and ONLY IF there are no good opportunities using existing text, you may suggest a new sentence or modify a sentence to better fit the link.\n";
+            $prompt .= "5. If and ONLY IF there are no good opportunities using existing text, you may suggest a new sentence or modify a sentence to better fit the link.\n";
         }
 
-        $prompt .= "Return ONLY a valid JSON array of objects with the exact keys: 'target_id', 'anchor_text', 'context_sentence'. Do not include markdown code block formatting like ```json ... ```, just output the raw JSON array.\n\n";
+        $prompt .= "\nReturn ONLY a valid JSON array of objects with the exact keys: 'target_id', 'anchor_text', 'context_sentence'. Do not include markdown code block formatting like ```json ... ```, just output the raw JSON array.\n\n";
         $prompt .= "Content:\n" . wp_trim_words( $content, 1500, '...' ) . "\n\n";
         $prompt .= "Target Posts (JSON):\n" . wp_json_encode( $targets_json );
 
