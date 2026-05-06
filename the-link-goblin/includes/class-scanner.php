@@ -150,12 +150,12 @@ class The_Link_Goblin_Scanner {
         }
         $model = get_option( 'the_link_goblin_api_model', 'deepseek-chat' );
 
-        $prompt = "Analyze the following Content and suggest 1-5 highly relevant internal links to other existing posts from the provided Target Posts list.\n";
-        $prompt .= "CRITICAL INSTRUCTIONS:\n";
-        $prompt .= "1. Your primary goal is to find an EXISTING sentence exactly as it appears in the Content. Extract that exact sentence for 'context_sentence' and extract the exact phrase within it to be the 'anchor_text'. The text must match the provided Content verbatim.\n";
-        $prompt .= "2. STRICT SEMANTIC MATCHING: The 'anchor_text' you select MUST be highly relevant, synonymous, or a direct match to the target post's 'title'.\n";
-        $prompt .= "3. NO TANGENTIAL LINKS: You are explicitly forbidden from making loose associations. For example, do not link the phrase 'Crawl demand' to a target post titled 'Robots.txt Tester' just because they share a broad SEO context. A user clicking the anchor text must expect to land on a page primarily about that exact topic.\n";
-        $prompt .= "4. If you cannot find a highly relevant match between an anchor phrase in the text and a target title, skip it. It is better to return 0 suggestions than bad suggestions.\n";
+        $prompt = "Analyze the following Content and suggest 3-5 contextually relevant internal links to other existing posts from the provided Target Posts list.\n";
+        $prompt .= "CRITICAL INSTRUCTION: Your primary goal is to find an EXISTING sentence exactly as it appears in the Content that is highly relevant to one of the target posts. Extract that exact sentence for 'context_sentence' and extract the exact phrase within it to be the 'anchor_text'. The text must match the provided Content verbatim.\n";
+        $prompt .= "STRICT RELEVANCE RULES:\n";
+        $prompt .= "- Strict Semantic Matching: The 'anchor_text' must be highly relevant, synonymous, or a direct match to the target post's title.\n";
+        $prompt .= "- No Tangential Links: You are explicitly forbidden from making loose associations (e.g. linking 'Crawl demand' to a 'Robots.txt Tester' tool). If there is no highly relevant target title for a concept, you MUST skip it.\n";
+        $prompt .= "- Contextual Flow: Ensure that a reader clicking the 'anchor_text' would logically expect to land on a page primarily about that exact topic.\n";
 
         if ( ! $allow_new ) {
             $prompt .= "5. STRICT TEXT REQUIREMENT: You are FORBIDDEN from suggesting new sentences or modifying existing ones. If you cannot find suitable existing text in the Content, return an empty array.\n";
