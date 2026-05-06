@@ -36,7 +36,47 @@ function wp_localize_script($handle, $object_name, $l10n) {}
 function plugins_url($path = '', $plugin = '') { return $path; }
 function rest_url($path = '') { return 'http://example.com/wp-json/' . $path; }
 function wp_create_nonce($action = -1) { return 'mock_nonce'; }
+function add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function = '', $icon_url = '', $position = null) {}
+function add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function = '', $position = null) {}
 function esc_url_raw($url) { return $url; }
+function esc_attr($text) { return htmlspecialchars($text, ENT_QUOTES, 'UTF-8'); }
+
+$mock_settings = array();
+function register_setting($option_group, $option_name, $args = array()) {
+    global $mock_settings;
+    if (is_string($args)) {
+        $args = array('sanitize_callback' => $args);
+    }
+    $mock_settings[$option_name] = $args;
+}
+
+function add_settings_section($id, $title, $callback, $page) {}
+function add_settings_field($id, $title, $callback, $page, $section = 'default', $args = array()) {}
+
+$mock_options = array();
+function get_option($option, $default = false) {
+    global $mock_options;
+    return isset($mock_options[$option]) ? $mock_options[$option] : $default;
+}
+
+function update_option($option, $value, $autoload = null) {
+    global $mock_options;
+    $mock_options[$option] = $value;
+    return true;
+}
+
+function sanitize_text_field($str) {
+    return strip_tags(trim($str));
+}
+
+function selected($selected, $current = true, $echo = true) {
+    $result = ((string) $selected === (string) $current) ? ' selected="selected"' : '';
+    if ($echo) {
+        echo $result;
+    }
+    return $result;
+}
+
 function register_rest_route($namespace, $route, $args = array()) {
     global $mock_rest_routes;
     $mock_rest_routes[$namespace . $route] = $args;

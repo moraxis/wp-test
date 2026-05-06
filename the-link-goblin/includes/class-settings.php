@@ -34,8 +34,8 @@ class The_Link_Goblin_Settings {
     }
 
     public function register_settings() {
-        register_setting( 'the_link_goblin_settings_group', 'the_link_goblin_api_key' );
-        register_setting( 'the_link_goblin_settings_group', 'the_link_goblin_api_model' );
+        register_setting( 'the_link_goblin_settings_group', 'the_link_goblin_api_key', 'sanitize_text_field' );
+        register_setting( 'the_link_goblin_settings_group', 'the_link_goblin_api_model', array( $this, 'sanitize_api_model' ) );
 
         add_settings_section(
             'the_link_goblin_main_section',
@@ -94,6 +94,20 @@ class The_Link_Goblin_Settings {
             </form>
         </div>
         <?php
+    }
+
+    /**
+     * Sanitize the API model setting.
+     *
+     * @param string $model The model to sanitize.
+     * @return string The sanitized model.
+     */
+    public function sanitize_api_model( $model ) {
+        $allowed_models = array( 'deepseek-chat', 'deepseek-reasoner' );
+        if ( in_array( $model, $allowed_models, true ) ) {
+            return $model;
+        }
+        return 'deepseek-chat';
     }
 
     public function render_dashboard_page() {
