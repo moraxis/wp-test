@@ -21,8 +21,8 @@ class TestRunner {
     public function run() {
         $testClasses = array(
             'LLMS_Txt_Validator_Test',
-            'The_Link_Goblin_Settings_Test'
-            'Link_Velocity_Calculator_Test'
+            'The_Link_Goblin_Settings_Test',
+            'Link_Velocity_Calculator_Test',
             'The_Link_Goblin_Test'
         );
 
