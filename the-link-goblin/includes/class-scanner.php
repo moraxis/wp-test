@@ -158,12 +158,12 @@ class The_Link_Goblin_Scanner {
         $prompt .= "- Contextual Flow: Ensure that a reader clicking the 'anchor_text' would logically expect to land on a page primarily about that exact topic.\n";
 
         if ( ! $allow_new ) {
-            $prompt .= "STRICT REQUIREMENT: You are FORBIDDEN from suggesting new sentences or modifying existing ones. If you cannot find suitable existing text in the Content, return an empty array.\n";
+            $prompt .= "5. STRICT TEXT REQUIREMENT: You are FORBIDDEN from suggesting new sentences or modifying existing ones. If you cannot find suitable existing text in the Content, return an empty array.\n";
         } else {
-            $prompt .= "If and ONLY IF there are no good opportunities using existing text, you may suggest a new sentence or modify a sentence to better fit the link.\n";
+            $prompt .= "5. If and ONLY IF there are no good opportunities using existing text, you may suggest a new sentence or modify a sentence to better fit the link.\n";
         }
 
-        $prompt .= "Return ONLY a valid JSON array of objects with the exact keys: 'target_id', 'anchor_text', 'context_sentence'. Do not include markdown code block formatting like ```json ... ```, just output the raw JSON array.\n\n";
+        $prompt .= "\nReturn ONLY a valid JSON array of objects with the exact keys: 'target_id', 'anchor_text', 'context_sentence'. Do not include markdown code block formatting like ```json ... ```, just output the raw JSON array.\n\n";
         $prompt .= "Content:\n" . wp_trim_words( $content, 1500, '...' ) . "\n\n";
         $prompt .= "Target Posts (JSON):\n" . wp_json_encode( $targets_json );
 
