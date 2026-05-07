@@ -29,14 +29,17 @@ class The_Link_Goblin_Metabox {
     }
 
     public function add_meta_box() {
-        add_meta_box(
-            'the_link_goblin_suggestions_mb',
-            'The Link Goblin - Suggestions',
-            array( $this, 'render_meta_box' ),
-            'post',
-            'side',
-            'high'
-        );
+        $screens = array( 'post', 'page', 'glossary' );
+        foreach ( $screens as $screen ) {
+            add_meta_box(
+                'the_link_goblin_suggestions_mb',
+                'The Link Goblin - Suggestions',
+                array( $this, 'render_meta_box' ),
+                $screen,
+                'side',
+                'high'
+            );
+        }
     }
 
     public function render_meta_box( $post ) {
@@ -49,6 +52,27 @@ class The_Link_Goblin_Metabox {
         ) );
 
         echo '<div id="tlg-metabox-container">';
+        echo '<div id="tlg-suggestions-wrapper">';
+        echo self::render_suggestions_html( $post->ID );
+        echo '</div>'; // End wrapper
+
+        echo '<hr>';
+        echo '<p><label><input type="checkbox" id="tlg-allow-new-suggestions" checked="checked"> Include new text suggestions if no exact matches found</label></p>';
+        echo '<button type="button" id="tlg-metabox-scan-btn" class="button button-primary">Scan For Links</button>';
+        echo '<span id="tlg-metabox-scan-status"></span>';
+        echo '</div>';
+    }
+
+    public static function render_suggestions_html( $post_id ) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'the_link_goblin_suggestions';
+
+        $suggestions = $wpdb->get_results( $wpdb->prepare(
+            "SELECT * FROM $table_name WHERE post_id = %d ORDER BY created_at DESC",
+            $post_id
+        ) );
+
+        ob_start();
 
         if ( ! empty( $suggestions ) ) {
             echo '<ul class="tlg-suggestions-list">';
@@ -56,10 +80,21 @@ class The_Link_Goblin_Metabox {
                 $target_title = get_the_title( $sugg->target_post_id );
                 $target_url   = get_permalink( $sugg->target_post_id );
 
-                echo '<li>';
+                $type_label = '';
+                if ( isset( $sugg->is_existing_text ) ) {
+                    if ( $sugg->is_existing_text == 1 ) {
+                        $type_label = '<span class="tlg-badge tlg-badge-existing">Existing Text</span>';
+                    } else {
+                        $type_label = '<span class="tlg-badge tlg-badge-new">New Suggestion</span>';
+                    }
+                }
+
+                echo '<li data-suggestion-id="' . esc_attr( $sugg->id ) . '" data-target-id="' . esc_attr( $sugg->target_post_id ) . '">';
+                echo $type_label . '<br>';
                 echo '<strong>Anchor:</strong> <code>' . esc_html( $sugg->anchor_text ) . '</code><br>';
                 echo '<strong>Link To:</strong> <a href="' . esc_url( $target_url ) . '" target="_blank">' . esc_html( $target_title ) . '</a><br>';
-                echo '<em>Context:</em> "' . esc_html( $sugg->context_sentence ) . '"';
+                echo '<em>Context:</em> "' . esc_html( $sugg->context_sentence ) . '"<br>';
+                echo '<button type="button" class="button tlg-mark-added-btn" style="margin-top: 8px;">Mark as Added</button>';
                 echo '</li>';
             }
             echo '</ul>';
@@ -67,25 +102,15 @@ class The_Link_Goblin_Metabox {
             echo '<p id="tlg-no-suggestions">No suggestions available. Scan the post to get started.</p>';
         }
 
-        echo '<hr>';
-        echo '<button type="button" id="tlg-metabox-scan-btn" class="button button-primary">Scan For Links</button>';
-        echo '<span id="tlg-metabox-scan-status"></span>';
-        echo '</div>';
+        return ob_get_clean();
     }
 
     public function check_content_change( $post_id, $post, $update ) {
-        // Only care about actual updates, not revisions or autosaves
-        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-            return;
-        }
-        if ( $post->post_status !== 'publish' ) {
-            return;
-        }
-
-        // Compare new content with previous content if available
-        // Unfortunately save_post fires after DB update, so comparing requires getting the revision,
-        // or we simply set the flag unconditionally on edit (the simplest and most robust approach).
-        update_post_meta( $post_id, '_the_link_goblin_needs_rescan', '1' );
+        // We moved this functionality to class-scanner.php so it applies everywhere,
+        // but we'll leave this empty or remove the hook above. Since the hook is
+        // in __construct, we'll keep the function signature and just return.
+        // The actual logic is now in class-scanner.php's mark_post_for_rescan method.
+        return;
     }
 
     public function display_scan_notice() {

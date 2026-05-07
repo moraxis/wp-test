@@ -49,6 +49,12 @@
     background-color: #fcfcfc;
 }
 
+#robots-test-path:focus,
+#robots-test-agent:focus,
+#robots-test-agent-custom:focus {
+    background-color: #fcfcfc !important;
+}
+
 .robots-btn-cta {
     background-color: #f99417;
     color: #ffffff;
