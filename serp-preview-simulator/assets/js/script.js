@@ -31,6 +31,23 @@ jQuery(document).ready(function($) {
     const $previewDate = $('#sim-preview-date');
     const $previewRatingWrap = $('#sim-preview-rating-wrap');
 
+    // Device Tabs Logic
+    const $deviceBtns = $('.serp-sim-device-btn');
+    const $previewContainer = $('#sim-preview-container');
+
+    $deviceBtns.on('click', function() {
+        const device = $(this).data('device');
+
+        $deviceBtns.removeClass('active');
+        $(this).addClass('active');
+
+        if (device === 'mobile') {
+            $previewContainer.addClass('mobile-view');
+        } else {
+            $previewContainer.removeClass('mobile-view');
+        }
+    });
+
     // Tab Switching Logic
     $tabBtns.on('click', function() {
         const target = $(this).data('tab');

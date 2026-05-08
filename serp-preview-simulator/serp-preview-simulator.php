@@ -2,7 +2,7 @@
 /**
  * Plugin Name: SERP Preview Simulator
  * Description: A SERP preview simulator with support for manual structured data (JSON-LD) input.
- * Version: 1.0.1
+ * Version: 1.1.0
  * Author: Nikola Knezhevich
  * Text Domain: serp-preview-simulator
  */
@@ -27,8 +27,8 @@ class SERP_Preview_Simulator {
 			wp_enqueue_script( 'codemirror-js', 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js', array(), '5.65.13', true );
 			wp_enqueue_script( 'codemirror-js-mode', 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js', array('codemirror-js'), '5.65.13', true );
 
-			wp_enqueue_style( 'serp-simulator-style', plugin_dir_url( __FILE__ ) . 'assets/css/style.css', array(), '1.0.1' );
-			wp_enqueue_script( 'serp-simulator-script', plugin_dir_url( __FILE__ ) . 'assets/js/script.js', array( 'jquery', 'codemirror-js', 'codemirror-js-mode' ), '1.0.1', true );
+			wp_enqueue_style( 'serp-simulator-style', plugin_dir_url( __FILE__ ) . 'assets/css/style.css', array(), '1.1.0' );
+			wp_enqueue_script( 'serp-simulator-script', plugin_dir_url( __FILE__ ) . 'assets/js/script.js', array( 'jquery', 'codemirror-js', 'codemirror-js-mode' ), '1.1.0', true );
 		}
 	}
 
@@ -88,9 +88,13 @@ class SERP_Preview_Simulator {
 
             <div class="serp-sim-right-column">
                 <div class="serp-sim-preview-wrapper">
+                    <div class="serp-sim-device-tabs serp-sim-tabs" style="justify-content: flex-end; margin-bottom: 10px;">
+                        <button class="serp-sim-device-btn serp-sim-tab-btn active" data-device="desktop">Desktop</button>
+                        <button class="serp-sim-device-btn serp-sim-tab-btn" data-device="mobile">Mobile</button>
+                    </div>
                     <h3>Preview</h3>
 
-                    <div class="serp-sim-preview-container">
+                    <div class="serp-sim-preview-container" id="sim-preview-container">
                         <!-- AI Overview module -->
                         <div id="sim-preview-ai" class="sim-preview-module sim-hidden">
                             <div class="sim-ai-header">
