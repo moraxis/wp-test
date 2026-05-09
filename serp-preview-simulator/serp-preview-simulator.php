@@ -2,7 +2,7 @@
 /**
  * Plugin Name: SERP Preview Simulator
  * Description: A SERP preview simulator with support for manual structured data (JSON-LD) input.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Nikola Knezhevich
  * Text Domain: serp-preview-simulator
  */
@@ -27,8 +27,8 @@ class SERP_Preview_Simulator {
 			wp_enqueue_script( 'codemirror-js', 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js', array(), '5.65.13', true );
 			wp_enqueue_script( 'codemirror-js-mode', 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js', array('codemirror-js'), '5.65.13', true );
 
-			wp_enqueue_style( 'serp-simulator-style', plugin_dir_url( __FILE__ ) . 'assets/css/style.css', array(), '1.1.0' );
-			wp_enqueue_script( 'serp-simulator-script', plugin_dir_url( __FILE__ ) . 'assets/js/script.js', array( 'jquery', 'codemirror-js', 'codemirror-js-mode' ), '1.1.0', true );
+			wp_enqueue_style( 'serp-simulator-style', plugin_dir_url( __FILE__ ) . 'assets/css/style.css', array(), '1.1.1' );
+			wp_enqueue_script( 'serp-simulator-script', plugin_dir_url( __FILE__ ) . 'assets/js/script.js', array( 'jquery', 'codemirror-js', 'codemirror-js-mode' ), '1.1.1', true );
 		}
 	}
 

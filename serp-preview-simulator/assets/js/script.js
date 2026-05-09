@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
     // Cache DOM elements
-    const $tabBtns = $('.serp-sim-tab-btn');
+    const $tabBtns = $('.serp-sim-left-column .serp-sim-tab-btn');
     const $tabContents = $('.serp-sim-tab-content');
 
     // Inputs
