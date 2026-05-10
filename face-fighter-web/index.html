@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Face Fighter MVP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+        <header>
+            <h1>Face Fighter</h1>
+            <p>Upload a photo and tap to relieve stress!</p>
+        </header>
+
+        <div id="controls-top">
+            <label for="imageUpload" class="custom-file-upload">
+                Upload Photo
+            </label>
+            <input type="file" id="imageUpload" accept="image/*">
+        </div>
+
+        <div id="game-area">
+            <div id="flash-overlay"></div>
+            <canvas id="gameCanvas"></canvas>
+            <div id="placeholder-text">Please upload a photo to start.</div>
+        </div>
+
+        <div id="controls-bottom">
+            <button id="resetBtn" class="action-btn" disabled>Reset Face</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
