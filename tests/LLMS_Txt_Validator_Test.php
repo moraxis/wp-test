@@ -5,6 +5,9 @@ class LLMS_Txt_Validator_Test {
         $this->test_permission_callback($runner);
         $this->test_fetch_remote_txt_size_limit($runner);
         $this->test_fetch_remote_txt_success($runner);
+        $this->test_rest_route_registration($runner);
+        $this->test_fetch_remote_txt_wp_error($runner);
+        $this->test_fetch_remote_txt_non_200($runner);
     }
 
     protected function test_permission_callback($runner) {
@@ -55,6 +58,71 @@ class LLMS_Txt_Validator_Test {
             $runner->recordPass("fetch_remote_txt returns success and content.");
         } else {
             $runner->recordFail("fetch_remote_txt failed to return success or content.");
+        }
+    }
+
+    protected function test_rest_route_registration($runner) {
+        global $mock_rest_routes;
+
+        // Clear existing routes to ensure we test this specific call
+        $mock_rest_routes = array();
+        $validator = new LLMS_Txt_Validator();
+        $validator->register_rest_routes();
+
+        $key = 'llms-validator/v1/fetch';
+        if (!isset($mock_rest_routes[$key])) {
+            $runner->recordFail("REST route $key not registered.");
+            return;
+        }
+
+        $route = $mock_rest_routes[$key];
+        $passed = true;
+
+        if ($route['methods'] !== 'GET') {
+            $runner->recordFail("REST route method is not GET.");
+            $passed = false;
+        }
+
+        $expected_args = array(
+            'url' => array(
+                'required' => true,
+                'type'     => 'string',
+                'format'   => 'uri',
+                'sanitize_callback' => 'esc_url_raw'
+            )
+        );
+
+        if ($route['args'] !== $expected_args) {
+            $runner->recordFail("REST route arguments do not match expected configuration.");
+            $passed = false;
+        }
+
+        if ($passed) {
+            $runner->recordPass("REST route registration correctly verified.");
+        }
+    }
+
+    protected function test_fetch_remote_txt_wp_error($runner) {
+        $validator = new LLMS_Txt_Validator();
+        $request = new WP_REST_Request(array('url' => 'https://example.com/error'));
+        $response = $validator->fetch_remote_txt($request);
+
+        if (is_wp_error($response) && $response->code === 'fetch_error' && $response->data['status'] === 500) {
+            $runner->recordPass("fetch_remote_txt handles WP_Error correctly with 500 status.");
+        } else {
+            $runner->recordFail("fetch_remote_txt failed to handle WP_Error correctly.");
+        }
+    }
+
+    protected function test_fetch_remote_txt_non_200($runner) {
+        $validator = new LLMS_Txt_Validator();
+        $request = new WP_REST_Request(array('url' => 'https://example.com/?status=404'));
+        $response = $validator->fetch_remote_txt($request);
+
+        if (is_wp_error($response) && $response->code === 'fetch_error' && $response->data['status'] === 404) {
+            $runner->recordPass("fetch_remote_txt handles non-200 status correctly.");
+        } else {
+            $runner->recordFail("fetch_remote_txt failed to handle non-200 status correctly.");
         }
     }
 }

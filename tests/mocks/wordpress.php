@@ -201,9 +201,14 @@ function wp_safe_remote_get($url, $args = array()) {
         return new WP_Error('fetch_error', 'Mock error');
     }
 
+    $code = 200;
+    if (preg_match('/status=(\d+)/', $url, $matches)) {
+        $code = intval($matches[1]);
+    }
+
     return array(
         'body' => 'mock content',
-        'response' => array('code' => 200)
+        'response' => array('code' => $code)
     );
 }
 
