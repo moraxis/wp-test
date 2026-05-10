@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Robots.txt Validator
  * Description: A shortcode-based plugin to validate robots.txt files. Use shortcode [robots_txt_validator].
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Nikola Knezhevich
  */
 
@@ -28,8 +28,8 @@ class Robots_Txt_Validator {
 
         // No specific markdown mode needed for robots.txt, default or a simple generic mode is fine, we'll use base.
 
-        wp_register_style('robots-validator-style', plugins_url('assets/css/style.css', __FILE__), array('codemirror-css'), '1.0.3');
-        wp_register_script('robots-validator-script', plugins_url('assets/js/validator.js', __FILE__), array('jquery', 'codemirror-js'), '1.0.3', true);
+        wp_register_style('robots-validator-style', plugins_url('assets/css/style.css', __FILE__), array('codemirror-css'), '1.0.4');
+        wp_register_script('robots-validator-script', plugins_url('assets/js/validator.js', __FILE__), array('jquery', 'codemirror-js'), '1.0.4', true);
 
         wp_localize_script('robots-validator-script', 'robotsValidatorConfig', array(
             'restUrl' => esc_url_raw(rest_url('robots-validator/v1/fetch')),
@@ -104,7 +104,7 @@ class Robots_Txt_Validator {
         register_rest_route('robots-validator/v1', '/fetch', array(
             'methods'  => 'GET',
             'callback' => array($this, 'fetch_remote_txt'),
-            'permission_callback' => '__return_true', // Publicly accessible to handle frontend requests
+            'permission_callback' => array($this, 'check_permission'),
             'args' => array(
                 'url' => array(
                     'required' => true,
@@ -114,6 +114,10 @@ class Robots_Txt_Validator {
                 )
             )
         ));
+    }
+
+    public function check_permission() {
+        return current_user_can('edit_posts');
     }
 
     public function fetch_remote_txt($request) {
@@ -128,6 +132,7 @@ class Robots_Txt_Validator {
         $response = wp_safe_remote_get($url, array(
             'timeout' => 15,
             'redirection' => 5,
+            'limit' => 1048576, // 1MB limit
             'user-agent' => 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
         ));
 
