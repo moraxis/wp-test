@@ -194,6 +194,9 @@ jQuery(document).ready(function($) {
             url: robotsValidatorConfig.restUrl,
             method: 'GET',
             data: { url: url },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-WP-Nonce', robotsValidatorConfig.nonce);
+            },
             success: function(response) {
                 btn.prop('disabled', false).text('Fetch URL');
                 if (response.success) {

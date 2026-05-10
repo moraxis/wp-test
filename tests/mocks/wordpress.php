@@ -41,6 +41,9 @@ function add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $
 function esc_url_raw($url) { return $url; }
 function esc_attr($text) { return htmlspecialchars($text, ENT_QUOTES, 'UTF-8'); }
 
+function __return_true() { return true; }
+function __return_false() { return false; }
+
 $mock_settings = array();
 function register_setting($option_group, $option_name, $args = array()) {
     global $mock_settings;
