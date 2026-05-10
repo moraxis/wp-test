@@ -82,7 +82,7 @@ class The_Link_Goblin_Metabox {
 
                 $type_label = '';
                 if ( isset( $sugg->is_existing_text ) ) {
-                    if ( $sugg->is_existing_text == 1 ) {
+                    if ( (int) $sugg->is_existing_text === 1 ) {
                         $type_label = '<span class="tlg-badge tlg-badge-existing">Existing Text</span>';
                     } else {
                         $type_label = '<span class="tlg-badge tlg-badge-new">New Suggestion</span>';
