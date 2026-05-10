@@ -1,0 +1,131 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    touch-action: manipulation; /* Prevent double-tap zoom on mobile */
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    height: 100vh;
+    height: 100dvh; /* dynamic viewport height for mobile browsers */
+    display: flex;
+    justify-content: center;
+    overflow: hidden; /* Prevent scrolling */
+}
+
+#app-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    height: 100%;
+    padding: 1rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+header h1 {
+    color: #ff4757;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.25rem;
+    font-size: 1.8rem;
+    text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+}
+
+header p {
+    font-size: 0.9rem;
+    color: #a4b0be;
+}
+
+#controls-top {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload, .action-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    cursor: pointer;
+    background-color: #2f3542;
+    color: #ffffff;
+    border: 2px solid #ff4757;
+    border-radius: 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.custom-file-upload:active, .action-btn:active {
+    transform: scale(0.95);
+    background-color: #ff4757;
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #57606f;
+    transform: none;
+    background-color: #2f3542;
+}
+
+#game-area {
+    flex-grow: 1;
+    position: relative;
+    background-color: #1e272e;
+    border-radius: 12px;
+    border: 2px solid #2f3542;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#gameCanvas {
+    max-width: 100%;
+    max-height: 100%;
+    display: none; /* Hidden until image is uploaded */
+    touch-action: none; /* Prevent browser handling of gestures on canvas */
+}
+
+#placeholder-text {
+    color: #57606f;
+    text-align: center;
+    padding: 1rem;
+}
+
+#controls-bottom {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+/* Flash overlay effect */
+#flash-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 0, 0, 0);
+    pointer-events: none; /* Allow clicks to pass through */
+    z-index: 10;
+    transition: background-color 0.1s ease-out;
+}
+
+.flash-active {
+    background-color: rgba(255, 0, 0, 0.4) !important;
+}
