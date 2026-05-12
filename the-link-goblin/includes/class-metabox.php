@@ -7,7 +7,6 @@ class The_Link_Goblin_Metabox {
 
     public function __construct() {
         add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
-        add_action( 'save_post', array( $this, 'check_content_change' ), 10, 3 );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
         add_action( 'admin_notices', array( $this, 'display_scan_notice' ) );
     }
@@ -103,14 +102,6 @@ class The_Link_Goblin_Metabox {
         }
 
         return ob_get_clean();
-    }
-
-    public function check_content_change( $post_id, $post, $update ) {
-        // We moved this functionality to class-scanner.php so it applies everywhere,
-        // but we'll leave this empty or remove the hook above. Since the hook is
-        // in __construct, we'll keep the function signature and just return.
-        // The actual logic is now in class-scanner.php's mark_post_for_rescan method.
-        return;
     }
 
     public function display_scan_notice() {
