@@ -5,6 +5,7 @@ class LLMS_Txt_Validator_Test {
         $this->test_permission_callback($runner);
         $this->test_fetch_remote_txt_size_limit($runner);
         $this->test_fetch_remote_txt_success($runner);
+        $this->test_disable_plugin_updates($runner);
     }
 
     protected function test_permission_callback($runner) {
@@ -55,6 +56,58 @@ class LLMS_Txt_Validator_Test {
             $runner->recordPass("fetch_remote_txt returns success and content.");
         } else {
             $runner->recordFail("fetch_remote_txt failed to return success or content.");
+        }
+    }
+
+    protected function test_disable_plugin_updates($runner) {
+        $validator = new LLMS_Txt_Validator();
+
+        // Scenario 1: Plugin is in the transient response
+        $transient = new stdClass();
+        $transient->response = array(
+            'llms-txt-validator/llms-txt-validator.php' => (object)array('new_version' => '2.0.0'),
+            'other-plugin/other-plugin.php' => (object)array('new_version' => '1.5.0')
+        );
+
+        $result = $validator->disable_plugin_updates($transient);
+        if (!isset($result->response['llms-txt-validator/llms-txt-validator.php']) && isset($result->response['other-plugin/other-plugin.php'])) {
+            $runner->recordPass("disable_plugin_updates successfully removes plugin from transient.");
+        } else {
+            $runner->recordFail("disable_plugin_updates failed to remove plugin from transient.");
+        }
+
+        // Scenario 2: Plugin is not in the transient response
+        $transient2 = new stdClass();
+        $transient2->response = array(
+            'other-plugin/other-plugin.php' => (object)array('new_version' => '1.5.0')
+        );
+        $result2 = $validator->disable_plugin_updates($transient2);
+        if (isset($result2->response['other-plugin/other-plugin.php']) && count($result2->response) === 1) {
+            $runner->recordPass("disable_plugin_updates leaves transient unchanged when plugin is not present.");
+        } else {
+            $runner->recordFail("disable_plugin_updates incorrectly modified transient when plugin was not present.");
+        }
+
+        // Scenario 3: Transient object does not have a response property
+        $transient3 = new stdClass();
+        $transient3->foo = 'bar'; // some other property
+
+        // This will issue a warning/notice in PHP 8.x when trying to access missing property as array
+        // if not careful, but the code checks isset($transient->response['...']) which handles it gracefully.
+        // Let's verify it doesn't throw and returns the object.
+        $error_thrown = false;
+        try {
+            $result3 = $validator->disable_plugin_updates($transient3);
+        } catch (Exception $e) {
+            $error_thrown = true;
+        } catch (Error $e) {
+            $error_thrown = true;
+        }
+
+        if (!$error_thrown && !isset($result3->response) && isset($result3->foo)) {
+            $runner->recordPass("disable_plugin_updates gracefully handles transient without response property.");
+        } else {
+            $runner->recordFail("disable_plugin_updates failed to handle transient without response property.");
         }
     }
 }
