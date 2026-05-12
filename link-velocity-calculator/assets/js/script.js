@@ -37,10 +37,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Display results
         var resultContainer = document.getElementById('lvc-result-container');
         var resultNumber = document.getElementById('lvc-result-number');
+        var resultPlaceholder = document.getElementById('lvc-result-placeholder');
 
         resultNumber.textContent = requiredLinks;
 
-        // Show container if hidden
+        // Show container if hidden, hide placeholder
+        if (resultPlaceholder) {
+            resultPlaceholder.classList.add('lvc-result-hidden');
+        }
         resultContainer.classList.remove('lvc-result-hidden');
     });
 });

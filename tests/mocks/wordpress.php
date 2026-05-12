@@ -32,6 +32,8 @@ function add_shortcode($tag, $callback) {
 }
 function wp_register_style($handle, $src, $deps = array(), $ver = false, $media = 'all') {}
 function wp_register_script($handle, $src, $deps = array(), $ver = false, $in_footer = false) {}
+function wp_enqueue_style($handle, $src = '', $deps = array(), $ver = false, $media = 'all') {}
+function wp_enqueue_script($handle, $src = '', $deps = array(), $ver = false, $in_footer = false) {}
 function wp_localize_script($handle, $object_name, $l10n) {}
 function plugins_url($path = '', $plugin = '') { return $path; }
 function rest_url($path = '') { return 'http://example.com/wp-json/' . $path; }
