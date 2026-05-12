@@ -41,6 +41,9 @@ function add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $
 function esc_url_raw($url) { return $url; }
 function esc_attr($text) { return htmlspecialchars($text, ENT_QUOTES, 'UTF-8'); }
 
+function __return_true() { return true; }
+function __return_false() { return false; }
+
 $mock_settings = array();
 function register_setting($option_group, $option_name, $args = array()) {
     global $mock_settings;
@@ -201,9 +204,14 @@ function wp_safe_remote_get($url, $args = array()) {
         return new WP_Error('fetch_error', 'Mock error');
     }
 
+    $code = 200;
+    if (preg_match('/status=(\d+)/', $url, $matches)) {
+        $code = intval($matches[1]);
+    }
+
     return array(
         'body' => 'mock content',
-        'response' => array('code' => 200)
+        'response' => array('code' => $code)
     );
 }
 
