@@ -46,10 +46,10 @@ class The_Link_Goblin_Dashboard {
                     continue; // Skip anchor links, emails, and tel
                 }
 
-                if ( in_array( $url, $urls_found ) ) {
+                if ( isset( $urls_found[$url] ) ) {
                     $duplicate_warning = true;
                 } else {
-                    $urls_found[] = $url;
+                    $urls_found[$url] = true;
                 }
 
                 // Check if internal
