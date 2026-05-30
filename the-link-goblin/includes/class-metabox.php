@@ -74,6 +74,13 @@ class The_Link_Goblin_Metabox {
         ob_start();
 
         if ( ! empty( $suggestions ) ) {
+            if ( function_exists( '_prime_post_caches' ) ) {
+                $target_ids = array_unique( wp_list_pluck( $suggestions, 'target_post_id' ) );
+                if ( ! empty( $target_ids ) ) {
+                    _prime_post_caches( $target_ids, false, false );
+                }
+            }
+
             echo '<ul class="tlg-suggestions-list">';
             foreach ( $suggestions as $sugg ) {
                 $target_title = get_the_title( $sugg->target_post_id );
