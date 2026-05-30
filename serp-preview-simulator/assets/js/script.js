@@ -271,7 +271,7 @@ jQuery(document).ready(function($) {
                 faqHtml += `
                     <div class="sim-faq-item">
                         <div class="sim-faq-q">${escapeHtml(q)}</div>
-                        <div class="sim-faq-a">${a}</div> <!-- Not escaping 'a' fully as it often contains HTML like links/lists -->
+                        <div class="sim-faq-a">${DOMPurify.sanitize(a)}</div> <!-- Sanitizing 'a' with DOMPurify as it contains HTML like links/lists -->
                     </div>
                 `;
             }
