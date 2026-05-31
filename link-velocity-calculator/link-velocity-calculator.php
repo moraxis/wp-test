@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Link Velocity Calculator
  * Description: Calculates how many links per month are needed to catch up with a competitor.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Nikola Knezhevich
  */
 
@@ -33,7 +33,7 @@ class Link_Velocity_Calculator {
      */
     public function enqueue_scripts() {
         // Register scripts early, but don't enqueue them everywhere.
-        $version = '1.0.2';
+        $version = '1.0.3';
 
         wp_register_style(
             'lvc-style',
