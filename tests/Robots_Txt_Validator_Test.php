@@ -10,19 +10,17 @@ class Robots_Txt_Validator_Test {
     protected function test_permission_callback($runner) {
         global $mock_rest_routes, $current_user_can_return;
 
+        $validator = new Robots_Txt_Validator();
+        $validator->register_rest_routes();
+
         $route = $mock_rest_routes['robots-validator/v1/fetch'];
         $callback = $route['permission_callback'];
-
-        // Initially it's __return_true, which is a function name as a string.
-        // After fix it will be array($this, 'check_permission')
 
         // Test with current_user_can returning false
         $current_user_can_return = false;
 
         $is_allowed = false;
-        if (is_string($callback) && function_exists($callback)) {
-            $is_allowed = call_user_func($callback);
-        } elseif (is_array($callback)) {
+        if (is_array($callback) && is_callable($callback)) {
              $is_allowed = call_user_func($callback);
         }
 
