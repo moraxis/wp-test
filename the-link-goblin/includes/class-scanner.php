@@ -12,7 +12,12 @@ class The_Link_Goblin_Scanner {
         add_action( 'save_post', array( $this, 'mark_post_for_rescan' ), 10, 3 );
     }
 
-    public function ajax_mark_added() {
+    /**
+     * Verifies the AJAX request and returns the post ID.
+     *
+     * @return int
+     */
+    protected function verify_ajax_request() {
         check_ajax_referer( 'the_link_goblin_scan_nonce', 'nonce' );
 
         if ( ! current_user_can( 'edit_posts' ) ) {
@@ -20,10 +25,19 @@ class The_Link_Goblin_Scanner {
         }
 
         $post_id = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
+        if ( ! $post_id ) {
+            wp_send_json_error( array( 'message' => 'Invalid post ID' ) );
+        }
+
+        return $post_id;
+    }
+
+    public function ajax_mark_added() {
+        $post_id = $this->verify_ajax_request();
         $suggestion_id = isset( $_POST['suggestion_id'] ) ? intval( $_POST['suggestion_id'] ) : 0;
         $target_id = isset( $_POST['target_id'] ) ? intval( $_POST['target_id'] ) : 0;
 
-        if ( ! $post_id || ! $suggestion_id || ! $target_id ) {
+        if ( ! $suggestion_id || ! $target_id ) {
             wp_send_json_error( array( 'message' => 'Invalid parameters' ) );
         }
 
@@ -46,16 +60,7 @@ class The_Link_Goblin_Scanner {
     }
 
     public function ajax_get_suggestions() {
-        check_ajax_referer( 'the_link_goblin_scan_nonce', 'nonce' );
-
-        if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_send_json_error( array( 'message' => 'Unauthorized' ) );
-        }
-
-        $post_id = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
-        if ( ! $post_id ) {
-            wp_send_json_error( array( 'message' => 'Invalid post ID' ) );
-        }
+        $post_id = $this->verify_ajax_request();
 
         $html = The_Link_Goblin_Metabox::render_suggestions_html( $post_id );
         wp_send_json_success( array( 'html' => $html ) );
@@ -77,18 +82,8 @@ class The_Link_Goblin_Scanner {
     }
 
     public function ajax_scan_post() {
-        check_ajax_referer( 'the_link_goblin_scan_nonce', 'nonce' );
-
-        if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_send_json_error( array( 'message' => 'Unauthorized' ) );
-        }
-
-        $post_id = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
+        $post_id = $this->verify_ajax_request();
         $allow_new = isset( $_POST['allow_new_suggestions'] ) ? intval( $_POST['allow_new_suggestions'] ) : 1;
-
-        if ( ! $post_id ) {
-            wp_send_json_error( array( 'message' => 'Invalid post ID' ) );
-        }
 
         $result = $this->scan_post( $post_id, $allow_new );
 
