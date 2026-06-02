@@ -97,9 +97,29 @@ class The_Link_Goblin_Dashboard {
         echo '</tr></thead>';
         echo '<tbody id="tlg-posts-table">';
 
+        // Pre-fetch suggestion counts for all posts to avoid N+1 queries
+        $suggestion_counts = array();
+        if ( ! empty( $posts ) ) {
+            $post_ids = wp_list_pluck( $posts, 'ID' );
+            $post_ids_placeholder = implode( ',', array_fill( 0, count( $post_ids ), '%d' ) );
+
+            $query = $wpdb->prepare(
+                "SELECT post_id, COUNT(*) as sugg_count FROM $table_name WHERE post_id IN ($post_ids_placeholder) GROUP BY post_id",
+                ...$post_ids
+            );
+
+            $results = $wpdb->get_results( $query );
+            foreach ( $results as $row ) {
+                $suggestion_counts[ $row->post_id ] = (int) $row->sugg_count;
+            }
+
+            // Prime post meta cache for the two meta keys to avoid any further N+1 meta queries
+            update_postmeta_cache( $post_ids );
+        }
+
         foreach ( $posts as $post ) {
             $counts = $instance->get_link_counts( $post->post_content );
-            $suggestions_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $table_name WHERE post_id = %d", $post->ID ) );
+            $suggestions_count = isset( $suggestion_counts[ $post->ID ] ) ? $suggestion_counts[ $post->ID ] : 0;
 
             $needs_rescan = get_post_meta( $post->ID, '_the_link_goblin_needs_rescan', true );
             $last_scanned = get_post_meta( $post->ID, '_the_link_goblin_last_scanned', true );
