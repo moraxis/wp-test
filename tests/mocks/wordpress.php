@@ -189,6 +189,20 @@ function get_post_type_object($post_type) {
     );
 }
 
+function wp_list_pluck( $list, $field, $index_key = null ) {
+    $newlist = array();
+    foreach ( $list as $key => $value ) {
+        if ( is_object( $value ) ) {
+            $newlist[ $key ] = $value->$field;
+        } else {
+            $newlist[ $key ] = $value[ $field ];
+        }
+    }
+    return $newlist;
+}
+
+function update_postmeta_cache( $post_ids ) {}
+
 function home_url() { return 'http://example.com'; }
 
 function wp_parse_url($url, $component = -1) { return parse_url($url, $component); }
