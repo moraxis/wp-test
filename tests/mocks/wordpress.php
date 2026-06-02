@@ -4,6 +4,7 @@
  */
 
 define('ABSPATH', true);
+define('WPINC', true);
 
 $mock_actions = array();
 function add_action($tag, $callback) {
@@ -36,6 +37,8 @@ function wp_enqueue_style($handle, $src = '', $deps = array(), $ver = false, $me
 function wp_enqueue_script($handle, $src = '', $deps = array(), $ver = false, $in_footer = false) {}
 function wp_localize_script($handle, $object_name, $l10n) {}
 function plugins_url($path = '', $plugin = '') { return $path; }
+function plugin_dir_url($file) { return 'http://example.com/wp-content/plugins/plugin-name/'; }
+function plugin_dir_path($file) { return dirname($file) . '/'; }
 function rest_url($path = '') { return 'http://example.com/wp-json/' . $path; }
 function wp_create_nonce($action = -1) { return 'mock_nonce'; }
 function add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function = '', $icon_url = '', $position = null) {}
@@ -211,10 +214,39 @@ function wp_safe_remote_get($url, $args = array()) {
         $code = intval($matches[1]);
     }
 
+    $body = 'mock content';
+    if (strpos($url, 'test_html=true') !== false) {
+        $body = '<!DOCTYPE html><html><head><title>Mock Title</title><meta name="description" content="Mock Description"></head><body></body></html>';
+    } elseif (strpos($url, 'empty_body=true') !== false) {
+        $body = '';
+    }
+
     return array(
-        'body' => 'mock content',
+        'body' => $body,
         'response' => array('code' => $code)
     );
+}
+
+function wp_verify_nonce($nonce, $action = -1) {
+    return $nonce === 'valid_nonce';
+}
+
+function wp_send_json_error($data = null, $status_code = null, $options = 0) {
+    throw new Exception(json_encode(array('success' => false, 'data' => $data)));
+}
+
+function wp_send_json_success($data = null, $status_code = null, $options = 0) {
+    throw new Exception(json_encode(array('success' => true, 'data' => $data)));
+}
+
+function check_ajax_referer($action = -1, $query_arg = false, $die = true) {
+    if (!isset($_REQUEST[$query_arg]) || $_REQUEST[$query_arg] !== 'valid_nonce') {
+        if ($die) {
+            wp_send_json_error(array('message' => 'Security check failed.'), 403);
+        }
+        return false;
+    }
+    return true;
 }
 
 function wp_remote_retrieve_response_code($response) {

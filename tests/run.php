@@ -5,6 +5,7 @@
 
 require_once __DIR__ . '/mocks/wordpress.php';
 require_once __DIR__ . '/../llms-txt-validator/llms-txt-validator.php';
+require_once __DIR__ . '/../llms-txt-generator/llms-txt-generator.php';
 require_once __DIR__ . '/../robots-txt-validator/robots-txt-validator.php';
 require_once __DIR__ . '/../the-link-goblin/includes/class-settings.php';
 require_once __DIR__ . '/../link-velocity-calculator/link-velocity-calculator.php';
@@ -22,6 +23,7 @@ class TestRunner {
     public function run() {
         $testClasses = array(
             'LLMS_Txt_Validator_Test',
+            'LLMS_Txt_Generator_Test',
             'Robots_Txt_Validator_Test',
             'The_Link_Goblin_Settings_Test',
             'Link_Velocity_Calculator_Test',
@@ -29,6 +31,7 @@ class TestRunner {
         );
 
         foreach ($testClasses as $testClass) {
+            echo "Running $testClass...\n";
             require_once __DIR__ . '/' . $testClass . '.php';
             $testInstance = new $testClass();
             $testInstance->run($this);
