@@ -23,6 +23,7 @@ require_once THE_LINK_GOBLIN_DIR . 'includes/class-activation.php';
 require_once THE_LINK_GOBLIN_DIR . 'includes/class-settings.php';
 require_once THE_LINK_GOBLIN_DIR . 'includes/class-scanner.php';
 require_once THE_LINK_GOBLIN_DIR . 'includes/class-dashboard.php';
+require_once THE_LINK_GOBLIN_DIR . 'includes/class-search.php';
 require_once THE_LINK_GOBLIN_DIR . 'includes/class-metabox.php';
 
 // Register activation hook

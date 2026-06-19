@@ -22,6 +22,16 @@ class The_Link_Goblin_Settings {
             30
         );
 
+        // Add search submenu
+        add_submenu_page(
+            'the-link-goblin',
+            'Search - The Link Goblin',
+            'Search',
+            'manage_options',
+            'the-link-goblin-search',
+            array( $this, 'render_search_page' )
+        );
+
         // Add settings submenu
         add_submenu_page(
             'the-link-goblin',
@@ -116,6 +126,15 @@ class The_Link_Goblin_Settings {
         }
         if ( class_exists( 'The_Link_Goblin_Dashboard' ) ) {
             The_Link_Goblin_Dashboard::render();
+        }
+    }
+
+    public function render_search_page() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+        if ( class_exists( 'The_Link_Goblin_Search' ) ) {
+            The_Link_Goblin_Search::render();
         }
     }
 }
