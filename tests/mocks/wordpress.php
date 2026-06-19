@@ -121,6 +121,10 @@ function get_post($post_id) {
 function get_permalink($post_id) { return "http://example.com/p/$post_id"; }
 
 function get_posts($args) {
+    global $mock_posts;
+    if (isset($mock_posts)) {
+        return $mock_posts;
+    }
     return array(
         (object) array('ID' => 101, 'post_title' => 'Target 1'),
     );
